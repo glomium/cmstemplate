@@ -1,0 +1,38 @@
+{% load i18n cms_tags menu_tags sekizai_tags staticfiles %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="all" />
+        <meta name="author" content="FIXME" />
+        <meta name="copyright" content="FIXME, {{ YEAR }}" />
+        <meta name="Content-Language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="description" content="{% block meta-description %}{% endblock %}" />
+        <title>FIXME - {% block title %}{% endblock %}</title>
+        <link href="{{ MEDIA_URL }}css/bootstrap.min.css" rel="stylesheet">{% render_block "css" %}
+        <link rel="shortcut icon" href="/favicon.ico" />
+    </head>
+    <body>
+        {% cms_toolbar %}
+        <div id="wrap">
+            {% render_block "body" %}
+            <div id="navigation">
+               <nav class="navbar navbar-full navbar-dark bg-primary">
+                   <div class="container">
+                       <a class="navbar-brand" href="#">FIXME</a>
+                       <ul class="nav navbar-nav">{% show_menu 0 0 0 0 "bootstrap4/menu.html" %}</ul>
+                   </div>
+               </nav>
+            </div>
+            {% block base_content %}{% endblock %}
+        </div>
+        <footer>
+            <div class="container">
+                {% block footer %}{% endblock %}
+            </div>
+        </footer>
+        <script src="{{ MEDIA_URL }}js/jquery.min.js"></script>
+        <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>{% render_block "js" %}
+    </body>
+</html>

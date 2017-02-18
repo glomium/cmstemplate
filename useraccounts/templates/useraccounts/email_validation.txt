@@ -1,0 +1,7 @@
+email validation text
+
+{{ timeout }}
+{{ crypt }}
+{{ stamp }}
+{{ email }}
+{{ user }}

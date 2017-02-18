@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Logout" %}{% endblock %}
+
+{% block base_content %}
+<div class="container" style="padding-top: 50px;">
+<div class="row">
+  <div class="col-sm-8 col-md-6 col-lg-4 col-sm-offset-2 col-md-offset-3 col-lg-offset-4">
+    <div class="card">
+        <div class="card-header">
+            {% trans "Successfully logged out" %}
+        </div>
+        <div class="card-block">
+            {% blocktrans trimmed %}
+            Thank you for using our services.
+            {% endblocktrans %}
+        </div>
+        <div class="card-footer"><small>
+            {% url 'accounts-login:index' as login %}
+            {% blocktrans trimmed %}
+            You can <a href="{{ login }}">log in</a> again.
+            {% endblocktrans %}
+        </small></div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

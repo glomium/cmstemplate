@@ -1,0 +1,15 @@
+{% extends "useraccounts/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Resend Email Validation" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Resend Email Validation" %}</h1>
+<p>
+{% blocktrans with email=object %}
+The validation code was successfully send to "{{ email }}".
+{% endblocktrans %}
+</p>
+<p><a href="javascript:history.back()">{% trans "Back" %}</a></p>
+{% endblock %}

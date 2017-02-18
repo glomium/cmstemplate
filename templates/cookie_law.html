@@ -1,0 +1,13 @@
+{% load i18n %}{% if not request.privacy_settings.accepted %}
+<div id="PrivacyCookieLaw" class="container fade in m-y-2">
+    <div class="alert alert-warning" role="alert">
+        <p>
+            {% blocktrans %}We use cookies so that we can provide you with the best possible website experience.{% endblocktrans %}
+        </p>
+        <p>
+            <a class="btn btn-primary" href="javascript:PrivacySettings.acceptCookieLaw();">{% trans "Accept" %}</a>
+            <a class="btn btn-secondary" href="{{ url|default:"#" }}">{% trans "Data protection" %}</a>
+        </p>
+    </div>
+</div>
+{% endif %}

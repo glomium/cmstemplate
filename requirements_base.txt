@@ -1,0 +1,39 @@
+### DJANGO BASE
+
+# 2017-02-11: first install
+Django==1.10.5
+
+# 2017-02-11: first install
+pip==9.0.1
+
+# 2017-02-11: first install
+pytz==2016.10
+
+### DJANGO CMS
+
+# 2017-02-11: first install
+django-cms==3.4.2
+
+# 2017-02-11: first install
+django-sekizai==0.10.0
+
+# 2017-02-11: first install
+django-treebeard==4.1.0
+
+### 3RD PARTY DJANGOCMS
+
+### DJANGO REST FRAMEWORK
+
+# 2017-02-11: first install
+djangorestframework==3.5.4
+
+# 2017-02-11: first install
+coreapi==2.2.4
+
+### MISC
+
+# 2017-02-11: first install
+python-logstash==0.4.6
+
+# 2017-02-11: first install
+psycopg2==2.6.2

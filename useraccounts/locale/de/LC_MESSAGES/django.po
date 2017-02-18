@@ -1,0 +1,388 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-11 01:36+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin.py:18
+msgid "Personal info"
+msgstr "Persönliche Informationen"
+
+#: admin.py:19
+msgid "Permissions"
+msgstr "Zugriffsrechte"
+
+#: admin.py:20
+msgid "Important dates"
+msgstr "Wichtige Daten"
+
+#: backends.py:32
+msgid "This account is inactive."
+msgstr "Dieses Konto ist inaktiv"
+
+#: backends.py:33
+msgid "Login denied - please try again later"
+msgstr "Zugriff verweigert - bitte probieren Sie es später nochmal"
+
+#: backends.py:34
+msgid "The login is currently not available"
+msgstr "Der Zugriff ist zur Zeit nicht verfügbar"
+
+#: forms.py:25 forms.py:106 forms.py:234
+msgid "Password"
+msgstr "Passwort"
+
+#: forms.py:28
+msgid ""
+"Please enter a correct login data. Note that both fields may be case-"
+"sensitive."
+msgstr ""
+"Bitte geben Sie richtige Login Daten ein. Beachten Sie, dass beide Felder "
+"Groß- und Kleinschreibung unterscheiden könnten."
+
+#: forms.py:46
+msgid "Email or Username"
+msgstr "Email oder Benutzername"
+
+#: forms.py:48
+msgid "Username"
+msgstr "Benutzername"
+
+#: forms.py:50 forms.py:197 models.py:315
+msgid "Email"
+msgstr "Email"
+
+#: forms.py:102 forms.py:152
+msgid "The two password fields didn't match."
+msgstr "Beide Passwörter stimmen nicht überein"
+
+#: forms.py:107
+msgid "Password confirmation"
+msgstr "Passwort bestätigen"
+
+#: forms.py:153
+msgid "Your old password was entered incorrectly. Please enter it again."
+msgstr "Ihr altes Passwort ist nicht richitg. Bitte geben Sie es erneut ein"
+
+#: forms.py:157
+msgid "Old password"
+msgstr "Altes Passwort"
+
+#: forms.py:158
+msgid "New password"
+msgstr "Neues Passwort"
+
+#: forms.py:159
+msgid "New password confirmation"
+msgstr "Neues Passwort bestätigen"
+
+#: forms.py:194
+msgid "This email address is invalid."
+msgstr "Diese Email Adresse ist nicht gültig"
+
+#: forms.py:257
+msgid "Invalid password"
+msgstr "Ungültiges Passwort"
+
+#: models.py:58
+msgid "username"
+msgstr "Username"
+
+#: models.py:62
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "150 Zeichen oder weniger. Nur Zahlen, Buchstaben @/./+/-/_"
+
+#: models.py:65
+msgid "A user with that username already exists."
+msgstr "Ein Benutzer mit diesem Namen existiert schon"
+
+#: models.py:68
+msgid "first name"
+msgstr "Vorname"
+
+#: models.py:69
+msgid "last name"
+msgstr "Nachname"
+
+#: models.py:70 models.py:118
+msgid "email address"
+msgstr "Email Adresse"
+
+#: models.py:71
+msgid "auth_token"
+msgstr ""
+
+#: models.py:72
+msgid "staff status"
+msgstr ""
+
+#: models.py:73
+msgid "Designates whether the user can log into this admin site."
+msgstr ""
+
+#: models.py:75
+msgid "active"
+msgstr "aktiv"
+
+#: models.py:76
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
+msgstr ""
+
+#: models.py:79 models.py:127
+msgid "valid"
+msgstr "valide"
+
+#: models.py:80
+msgid "Designates if the user has a valid email address."
+msgstr ""
+
+#: models.py:82
+msgid "date joined"
+msgstr ""
+
+#: models.py:89
+msgid "User"
+msgstr "Benutzer"
+
+#: models.py:90
+msgid "Users"
+msgstr "Benutzer"
+
+#: models.py:122 templates/useraccounts/email_list.html:14
+msgid "primary"
+msgstr "primär"
+
+#: models.py:131
+msgid "validated"
+msgstr "valide"
+
+#: models.py:133
+msgid "created"
+msgstr "erstellt"
+
+#: models.py:134
+msgid "updated"
+msgstr "aktualisiert"
+
+#: models.py:316 templates/useraccounts/email_list.html:5
+msgid "Emails"
+msgstr "Emails"
+
+#: templates/useraccounts/base.html:5
+msgid "Account"
+msgstr "Konto"
+
+#: templates/useraccounts/email_create_view.html:5
+msgid "Create Email"
+msgstr "Erstelle Email"
+
+#: templates/useraccounts/email_create_view.html:13
+msgid "Create"
+msgstr "Erstelle"
+
+#: templates/useraccounts/email_delete_view.html:5
+#: templates/useraccounts/email_delete_view.html:8
+msgid "Delete Email"
+msgstr "Lösche Email"
+
+#: templates/useraccounts/email_delete_view.html:10
+#, python-format
+msgid ""
+"\n"
+"Do you want to delete \"%(email)s\"?\n"
+msgstr ""
+"\n"
+"Möchten Sie wirklich \"%(email)s\" löschen?\n"
+
+#: templates/useraccounts/email_delete_view.html:18
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/useraccounts/email_list.html:17
+msgid "not validated"
+msgstr "nicht valide"
+
+#: templates/useraccounts/email_resend_view.html:5
+#: templates/useraccounts/email_resend_view.html:8
+msgid "Resend Email Validation"
+msgstr "Neusenden der Email Validierung"
+
+#: templates/useraccounts/email_resend_view.html:10
+#, python-format
+msgid ""
+"\n"
+"The validation code was successfully send to \"%(email)s\".\n"
+msgstr ""
+"\n"
+"Der Validierungs-Code wurde erfolgreich an \"%(email)s\" versendet.\n"
+
+#: templates/useraccounts/email_resend_view.html:14
+msgid "Back"
+msgstr "Zurück"
+
+#: templates/useraccounts/logged_out.html:5
+msgid "Logout"
+msgstr "Ausloggen"
+
+#: templates/useraccounts/logged_out.html:13
+msgid "Successfully logged out"
+msgstr "Erfolgreich ausgeloggt"
+
+#: templates/useraccounts/logged_out.html:16
+msgid "Thank you for using our services."
+msgstr "Danke, dass Sie unsere Dienste nutzen."
+
+#: templates/useraccounts/logged_out.html:22
+#, python-format
+msgid "You can <a href=\"%(login)s\">log in</a> again."
+msgstr "Sie können sich wieder <a href=\"%(login)s\">neu einloggen</a>."
+
+#: templates/useraccounts/login.html:5 templates/useraccounts/login.html:27
+msgid "Login"
+msgstr "Einloggen"
+
+#: templates/useraccounts/login.html:13
+msgid "Please sign in"
+msgstr "Bitte loggen Sie sich ein"
+
+#: templates/useraccounts/login.html:32
+#, python-format
+msgid ""
+"Please follow <a href=\"%(register)s\">this</a> Link to create a new account"
+msgstr ""
+"Folgen sie <a href=\"%(register)s\">diesem</a> Link um einen neuen Account "
+"zu erstellen"
+
+#: templates/useraccounts/password_change_form.html:5
+#: templates/useraccounts/password_change_form.html:8
+#: templates/useraccounts/password_change_form.html:27
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: templates/useraccounts/password_recover_form.html:5
+#: templates/useraccounts/password_recover_form.html:13
+msgid "Password Recover"
+msgstr "Passwort wiederherstellen"
+
+#: templates/useraccounts/password_recover_form.html:23
+msgid "Send Recover Link"
+msgstr "Sende Wiederherstellungslink"
+
+#: templates/useraccounts/password_set_form.html:5
+#: templates/useraccounts/password_set_form.html:13
+msgid "Set Password"
+msgstr "Setze Passwort"
+
+#: templates/useraccounts/password_set_form.html:28
+msgid "Change Password"
+msgstr "Ändere Passwort"
+
+#: validators.py:90
+#, python-format
+msgid ""
+"This password is too short. It must contain at least %(min_length)d "
+"characters."
+msgstr ""
+"Das Passwort ist zu kurz, es muss mindestens %(min_length)d Zeichen lang "
+"sein."
+
+#: validators.py:96
+#, python-format
+msgid "The password must contain at least %(min_length)d characters."
+msgstr "Das Passwort muss mindestens %(min_length)d lang sein."
+
+#: validators.py:116 validators.py:136
+#, python-format
+msgid "The password must contain at least %(min_length)d %(name)s."
+msgstr "Das Passwort muss mindestens %(min_length)d %(name)s enthalten."
+
+#: validators.py:125 validators.py:134
+#, python-format
+msgid "The password must contain at least %(name)s."
+msgstr "Das Passwort muss mindestens %(name)s enthalten."
+
+#: validators.py:146 validators.py:147
+#, python-format
+msgid "Expression must match %(expression)s"
+msgstr "Der Ausdruck muss mit %(expression)s übereinstimmen"
+
+#: validators.py:164
+#| msgid "number"
+msgid "one number"
+msgstr "eine Zahl"
+
+#: validators.py:165
+msgid "numbers"
+msgstr "Zahlen"
+
+#: validators.py:176
+#| msgid "lower character"
+msgid "one lower character"
+msgstr "einen Kleinbuchstaben"
+
+#: validators.py:177
+msgid "lower characters"
+msgstr "Kleinbuchstaben"
+
+#: validators.py:188
+msgid "one upper character"
+msgstr "einen Großbuchstaben"
+
+#: validators.py:189
+msgid "upper characters"
+msgstr "Großbuchstaben"
+
+#: validators.py:200
+msgid "one special character"
+msgstr "ein Sonderzeichen"
+
+#: validators.py:201
+msgid "special characters"
+msgstr "Sonderzeichen"
+
+#: validators.py:213
+msgid ""
+"Enter a valid username. This value may contain only letters, numbers and @/./"
+"+/-/_ characters."
+msgstr ""
+"Geben Sie einen gültigen Benutzernamen ein. Es sind nur Buchstaben, Zahlen "
+"und die Zeichen @/./+/-/_erlaubt"
+
+#: validators.py:214
+msgid ""
+"The username may contain only letters, numbers and @/./+/-/_ characters."
+msgstr ""
+"Der Benutzername darf nur Buchstaben, Zahlen und die Zeichen @/./+/-/_ "
+"enthalten"
+
+#: viewsets.py:64 viewsets.py:71
+msgid "Email is valid"
+msgstr "Email ist gültig"
+
+#: viewsets.py:74
+msgid "Validation information send"
+msgstr "Validations versendet"
+
+#: viewsets.py:96
+msgid "Password is valid"
+msgstr "Passwort ist gültig"
+
+#: viewsets.py:103
+msgid "Username is valid"
+msgstr "Benutzername ist gültig"

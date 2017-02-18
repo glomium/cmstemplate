@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block base_content %}
+<div class="container" style="padding-top: 50px;">
+<div class="row">
+  <div class="col-sm-8 col-md-6 col-lg-4 col-sm-offset-2 col-md-offset-3 col-lg-offset-4">
+    <div class="card">
+        <div class="card-header">
+            {% trans "Please sign in" %}
+        </div>
+        <div class="card-block">
+            <form class="form" role="form" action="" method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="{% trans "Login" %}">
+            </form>
+        </div>
+        <div class="card-footer"><small>
+            {% url 'accounts-register:index' as register %}
+            {% blocktrans trimmed %}
+            Please follow <a href="{{ register }}">this</a> Link to create a new account
+            {% endblocktrans %}
+        </small></div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

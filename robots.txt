@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /media/
+Disallow: /static/
+Allow: /
+
+Sitemap: http://www.FIXME.de/sitemap.xml

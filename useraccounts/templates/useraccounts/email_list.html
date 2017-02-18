@@ -1,0 +1,24 @@
+{% extends "useraccounts/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Emails" %}{% endblock %}
+
+{% block content %}
+<ul>
+    {% for obj in object_list %}
+    <li>
+        <p>
+            {{ obj }}
+            {% if obj.is_primary %}
+            <i>{% trans "primary" %}</i>
+            {% endif %}
+            {% if not obj.is_valid %}
+            <i>{% trans "not validated" %}</i>
+            {% endif %}
+        </p>
+    </li>
+    {% endfor %}
+</ul>
+<a href="create/">{% trans "Create" %}</a>
+{% endblock %}
