@@ -55,7 +55,7 @@ class UserManager(BaseUserManager):
 @python_2_unicode_compatible
 class User(AbstractUser):
     is_valid = models.BooleanField(_('valid'), default=False,
-        help_text=_('Designates if the user has a valid email address.')
+        help_text=_('Indicates if the user has a valid email address.')
     )
     objects = UserManager()
 
@@ -263,6 +263,8 @@ class Email(models.Model):
         # on the user creation
         if self.is_primary and self.user.email != self.email:
             self.user.email = self.email
+            if self.is_valid:
+                self.user.is_valid = True
             self.user.save()
 
         if self.is_primary and not self.original_primary:
