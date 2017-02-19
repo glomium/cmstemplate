@@ -8,9 +8,9 @@
 
 /node_modules
 /static
+/media/dist
 /\.virtenv
 /virtenv
-
 
 
 

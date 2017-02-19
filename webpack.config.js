@@ -1,8 +1,10 @@
 'use strict';
 
 // Modules
-var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
+var path = require('path');
+var webpack = require('webpack');
+
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -21,6 +23,8 @@ module.exports = function makeWebpackConfig () {
    * This is the object where all configuration gets set
    */
   var config = {};
+
+  config.context = __dirname,
 
   /**
    * Entry
@@ -41,7 +45,7 @@ module.exports = function makeWebpackConfig () {
    */
   config.output = {
     // Absolute output directory
-    path: __dirname + '/dist/',
+    path: path.join(__dirname, 'media', 'dist'),
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
@@ -110,7 +114,7 @@ module.exports = function makeWebpackConfig () {
           'css-loader?sourceMap!!postcss-loader!sass-loader'
       )
     }, {
-      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
       loader: 'url-loader?limit=100000'
     /*
     }, {
@@ -154,7 +158,7 @@ module.exports = function makeWebpackConfig () {
   // Render index.html
   config.plugins.push(
     new HtmlWebpackPlugin({
-      template: './app/public/index.html',
+      template: './src/index.html',
       inject: 'body'
     }),
 
@@ -182,9 +186,9 @@ module.exports = function makeWebpackConfig () {
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
-      new CopyWebpackPlugin([{
-        from: __dirname + '/dist'
-      }])
+      new CopyWebpackPlugin([], {
+        copyUnmodified: false,
+      })
     )
   }
 
@@ -213,9 +217,9 @@ module.exports = function makeWebpackConfig () {
    * Reference: http://webpack.github.io/docs/webpack-dev-server.html
    */
   config.devServer = {
-    contentBase: './src/public',
+    contentBase: './src',
     host: '0.0.0.0',
-    stats: 'minimal'
+    stats: 'minimal',
   };
 
   return config;
