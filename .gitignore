@@ -4,7 +4,7 @@
 *-journal
 
 /*\.egg-info
-/db.sqlite3
+/database\.sqlite
 
 /node_modules
 /static

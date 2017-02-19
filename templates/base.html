@@ -17,14 +17,6 @@
         {% cms_toolbar %}
         <div id="wrap">
             {% render_block "body" %}
-            <div id="navigation">
-               <nav class="navbar navbar-full navbar-dark bg-primary">
-                   <div class="container">
-                       <a class="navbar-brand" href="#">FIXME</a>
-                       <ul class="nav navbar-nav">{% show_menu 0 0 0 0 "bootstrap4/menu.html" %}</ul>
-                   </div>
-               </nav>
-            </div>
             {% block base_content %}{% endblock %}
         </div>
         <footer>

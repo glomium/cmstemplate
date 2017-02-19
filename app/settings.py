@@ -19,6 +19,9 @@ CMS_TEMPLATES = (
     ("template_clean.html", gettext("Full width Template")),
 )
 
+ADMINS = (
+    ('Sebastian Braun', 'sebastian@elmnt.de'),
+)
 MANAGERS = ADMINS
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
 DEFAULT_FROM_EMAIL = "sebastian@elmnt.de"

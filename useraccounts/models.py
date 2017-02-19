@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail.message import EmailMultiAlternatives
@@ -53,32 +52,11 @@ class UserManager(BaseUserManager):
         return user
 
 
-class AbstractUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(
-        _('username'),
-        max_length=150,
-        unique=True,
-        db_index=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[validate_username],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        },
-    )
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, blank=True)
-    email = models.EmailField(_('email address'), blank=True, editable=False)
-    is_staff = models.BooleanField(_('staff status'), default=False,
-        help_text=_('Designates whether the user can log into this admin site.')
-    )
-    is_active = models.BooleanField(_('active'), default=True,
-        help_text=_('Designates whether this user should be treated as '
-                    'active. Unselect this instead of deleting accounts.')
-    )
+@python_2_unicode_compatible
+class User(AbstractUser):
     is_valid = models.BooleanField(_('valid'), default=False,
         help_text=_('Designates if the user has a valid email address.')
     )
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
@@ -87,7 +65,6 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-        abstract = True
 
     def add_email(self, emailaddress, request=None, skip=False):
         email = self.emails.create(email=emailaddress)
@@ -113,8 +90,8 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
 
 @python_2_unicode_compatible
-class AbstractEmail(models.Model):
-    email = models.EmailField(_('email address'), blank=False, db_index=True, null=False, unique=True)
+class Email(models.Model):
+    email = models.EmailField(_('Email Address'), blank=False, db_index=True, null=False, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="emails", null=False, blank=False)
 
     is_primary = models.BooleanField(
@@ -133,7 +110,7 @@ class AbstractEmail(models.Model):
     updated = models.DateTimeField(_('updated'), editable=False, auto_now=True)
 
     def __init__(self, *args, **kwargs):
-        super(AbstractEmail, self).__init__(*args, **kwargs)
+        super(Email, self).__init__(*args, **kwargs)
         self.original_primary = self.is_primary
 
     def __str__(self):
@@ -141,7 +118,7 @@ class AbstractEmail(models.Model):
 
     def save(self, *args, **kwargs):
         self.email = self.email.lower()
-        data = super(AbstractEmail, self).save(*args, **kwargs)
+        data = super(Email, self).save(*args, **kwargs)
         self.update_primary()
         return data
 
@@ -313,15 +290,4 @@ class AbstractEmail(models.Model):
     class Meta:
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
-        abstract = True
         ordering = ["email"]
-
-
-class User(AbstractUser):
-    class Meta(AbstractUser.Meta):
-        abstract = False
-
-
-class Email(AbstractEmail):
-    class Meta(AbstractEmail.Meta):
-        abstract = False

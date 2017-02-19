@@ -21,10 +21,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf.urls.i18n import i18n_patterns
 
-
 from django.contrib.sitemaps.views import index as sitemaps_index
 from django.contrib.sitemaps.views import sitemap as sitemaps_sitemap
-# from django.views.static import serve
+from django.views.static import serve
 
 from importlib import import_module
 from collections import OrderedDict
@@ -49,11 +48,7 @@ urlpatterns += i18n_patterns(
     prefix_default_language=len(getattr(settings, "LANGUAGES", [])) > 1,
 )
 
-
-'''
 if settings.DEBUG:
-    urlpatterns = [
+    urlpatterns += [
         url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-        url(r'', include('django.contrib.staticfiles.urls')),
-    ] + urlpatterns
-'''
+    ]

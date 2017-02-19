@@ -26,6 +26,10 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    # custom (swapped)
+    'useraccounts',
+
+    # django modules
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,13 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
 
+    # 3rd party
     'cms',
     'menus',
     'treebeard',
-    # 'mptt',
     'sekizai',
-    'reversion',
+
+    # custom
 ]
+
+AUTH_USER_MODEL="useraccounts.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
