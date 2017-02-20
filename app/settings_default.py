@@ -117,6 +117,7 @@ LANGUAGES = [
 ]
 
 CMS_PERMISSION = True
+CMS_TOOLBAR_ANONYMOUS_ON = False
 
 
 # Database
