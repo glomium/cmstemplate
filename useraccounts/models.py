@@ -26,8 +26,6 @@ from .signals import email_validated
 from .signals import user_validated
 from .signals import validation_send
 from .signals import password_restore_send
-from .validators import validate_username
-# from .validators import validate_password
 
 
 import logging

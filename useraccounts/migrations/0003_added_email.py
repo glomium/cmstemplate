@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 from django.conf import settings
 
-import useraccounts.validators
-
 
 class Migration(migrations.Migration):
 
@@ -53,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='username',
-            field=models.CharField(error_messages={'unique': 'A user with that username already exists.'}, max_length=150, validators=[useraccounts.validators.validate_username], help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, verbose_name='username', db_index=True),
+            field=models.CharField(error_messages={'unique': 'A user with that username already exists.'}, max_length=150, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, verbose_name='username', db_index=True),
         ),
         migrations.AlterField(
             model_name='user',
