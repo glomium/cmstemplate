@@ -45,11 +45,10 @@ class AuthBackend(ModelBackend):
 
         # get variables
         request = kwargs.pop('request', None)
-        require_password = kwargs.pop('require_password', True)
         username = kwargs.pop('username', kwargs.pop('email', None))
         password = kwargs.pop('password', None)
 
-        if settings.THROTTLE_IP and require_password:
+        if settings.THROTTLE_IP:
             if not request:
                 logger.critical(
                     'The authentification backend needs to be called with a request object or you need to deactivate THROTTLE_IP.'
@@ -75,10 +74,6 @@ class AuthBackend(ModelBackend):
                 except email.DoesNotExist:
                     pass
                 else:
-                    if not require_password:
-                        self.login_success(username, "username", obj.user)
-                        return obj.user
-
                     if settings.THROTTLE_USER:
                         self.throttle_user(obj.user.pk, now)
 
@@ -104,10 +99,6 @@ class AuthBackend(ModelBackend):
                     # difference between an existing and a non-existing user (#20760).
                     model().set_password(password)
                 else:
-                    if not require_password:
-                        self.login_success(username, "username", user)
-                        return user
-
                     if settings.THROTTLE_USER:
                         self.throttle_user(user.pk, now)
 

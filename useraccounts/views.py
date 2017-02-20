@@ -232,11 +232,6 @@ class EmailValidationView(SingleObjectMixin, TemplateView):
 
         self.object.validate()
 
-        # # autologin user
-        # if not self.request.user.is_authenticated():
-        #     user = authenticate(username=self.object.user.username, request=self.request, require_password=False)
-        #     login(self.request, user)
-
         success_url = self.get_success_url()
         if success_url:
             return HttpResponseRedirect(success_url)
