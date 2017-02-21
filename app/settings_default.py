@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sekizai',
 
     # custom
+    'cmsplugin_markdown',
 ]
 
 AUTH_USER_MODEL="useraccounts.User"

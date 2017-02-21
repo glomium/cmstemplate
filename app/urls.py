@@ -45,7 +45,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     url(r'^admin/', admin.site.urls),
     url(r'^', include('cms.urls')),
-    prefix_default_language=len(getattr(settings, "LANGUAGES", [])) > 1,
+    prefix_default_language=getattr(settings, "USE_I18N", False),
 )
 
 if settings.DEBUG:
