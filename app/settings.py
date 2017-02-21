@@ -12,12 +12,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from .settings_default import *  # NOQA
 
+
 LANGUAGES = [
     ('de', "Deutsch"),
 ]
-CMS_TEMPLATES = (
-    ("template_clean.html", gettext("Full width Template")),
-)
 
 ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),

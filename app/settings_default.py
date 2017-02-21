@@ -110,7 +110,8 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # CMS =========================================================================
 
 CMS_TEMPLATES = (
-    ("template_clean.html", gettext("Full width Template")),
+    ("template_clean.html", gettext("Clean Template")),
+    ("cmsplugin_markdown/base.html", gettext("Documentation")),
 )
 
 LANGUAGES = [
@@ -315,7 +316,7 @@ except ImportError:
     }
 
 
-# SESSION =========================================================================
+# SESSION =====================================================================
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 if 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
@@ -330,3 +331,7 @@ if 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
            ),
         },
     }
+
+from .settings_custom import *  # NOQA
+
+# DYNAMIC SETTINGS ============================================================

@@ -1,0 +1,36 @@
+{% load menu_tags %}
+
+<div class="card">
+   <ul class="list-group list-group-flush">
+       <li class="list-group-item active"><a href="#">Cras justo odio</a></li>
+       <li class="list-group-item"><a href="#">Dapibus ac facilisis in</a></li>
+       <li class="list-group-item"><a href="#">Vestibulum at eros</a></li>
+   </ul>
+</div>
+
+<ul class="nav nav-pills flex-column">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Active</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+  <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+  <a class="nav-link disabled" href="#">Disabled</a>
+  </li>
+</ul>
+
+{% for child in children %}
+
+<li class="child{% if child.selected %} selected{% endif %}{% if child.ancestor %} ancestor{% endif %}{% if child.sibling %} sibling{% endif %}{% if child.descendant %} descendant{% endif %}">
+        <a href="{{ child.attr.redirect_url|default:child.get_absolute_url }}">{{ child.get_menu_title }}</a>
+            {% if child.children %}
+                <ul>
+                            {% show_menu from_level to_level extra_inactive extra_active template "" "" child %}
+                                </ul>
+                                    {% endif %}
+</li>
+{% endfor %}
