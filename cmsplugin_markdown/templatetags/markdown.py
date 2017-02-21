@@ -24,13 +24,14 @@ def markdown_filter(text):
     return mark_safe(markdown.markdown(
         text,
         extensions=[
-            # UrlizeExtension(),
-            # StrikeThroughExtension(),
-            # ChecklistExtension(),
+            UrlizeExtension(),
+            StrikeThroughExtension(),
+            ChecklistExtension(),
             'smart_strong',
             'sane_lists',
             'smarty',
             'fenced_code',
+            'codehilite',
         ],
         output_format="html5",
         save_mode='escape',
