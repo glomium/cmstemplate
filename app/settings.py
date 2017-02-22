@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'homepage.middleware.PrivacyMiddleware',
+    'app.middleware.PrivacyMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
@@ -102,7 +102,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # adds the DoNotTrack as variable to the context
-                # 'homepage.context_processors.dnt',
+                'app.context_processors.dnt',
 
                 'cms.context_processors.cms_settings',
                 'sekizai.context_processors.sekizai',
@@ -330,6 +330,15 @@ if 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
     }
 
 
+if DEBUG:
+    try:
+        importlib("debug_toolbar")
+        DEBUG_TOOLBAR = True
+    except ImportError:
+        DEBUG_TOOLBAR = False
+else
+   DEBUG_TOOLBAR = False
+
 custom = import_module(".settings_custom", __package__)
 
 if hasattr(custom, 'INSTALLED_APPS'):
@@ -362,3 +371,19 @@ if "material" in INSTALLED_APPS:
 
 if "MANAGERS" not in globals():
     MANAGERS = ADMINS
+
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+    DEBUG_TOOLBAR_CONFIG = {
+        'JQUERY_URL': None,
+    }
+else:
+    MIDDLEWARE_CLASSES = (
+        'cms.middleware.utils.ApphookReloadMiddleware',
+    ) + MIDDLEWARE_CLASSES
