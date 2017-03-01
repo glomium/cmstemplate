@@ -337,7 +337,7 @@ if DEBUG:
         DEBUG_TOOLBAR = True
     except ImportError:
         DEBUG_TOOLBAR = False
-else
+else:
    DEBUG_TOOLBAR = False
 
 custom = import_module(".settings_custom", __package__)
