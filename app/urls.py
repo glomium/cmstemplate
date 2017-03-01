@@ -35,12 +35,17 @@ urlpatterns = [
     url(r'^sitemap-(?P<section>\w+)\.xml$', sitemaps_sitemap, {'sitemaps': SITEMAPS}),
 ]
 
-
-urlpatterns += i18n_patterns(
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('cms.urls')),
-    prefix_default_language=getattr(settings, "USE_I18N", False),
-)
+if getattr(settings, "USE_I18N", False):
+    urlpatterns += i18n_patterns(
+        url(r'^admin/', admin.site.urls),
+        url(r'^', include('cms.urls')),
+        prefix_default_language=True,
+    )
+else:
+    urlpatterns += [
+        url(r'^admin/', admin.site.urls),
+        url(r'^', include('cms.urls')),
+    ]
 
 if settings.DEBUG:
     urlpatterns += [

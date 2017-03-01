@@ -352,7 +352,7 @@ for i in dir(custom):
     if i in ['INSTALLED_APPS', 'CMSTEMPLATE_SITEMAPS']:
         continue
 
-    if not re.match(r'^[A-Z][A-Z_]*[A-Z]$', i):
+    if not re.match(r'^[A-Z][A-Z0-9_]*[A-Z0-9]$', i):
         continue
 
     globals()[i] = getattr(custom, i)
