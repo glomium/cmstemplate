@@ -12,7 +12,10 @@ class PrivacyMiddleware(object):
     information in the request.
     """
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         if request.META.get('HTTP_DNT') == '1':
             request.DNT = True
         else:
@@ -24,7 +27,9 @@ class PrivacyMiddleware(object):
             'targeting': bool(request.COOKIES.get('targeting_tracking', not request.DNT)),
         }
 
-    def process_response(self, request, response):
+        response = self.get_response(request)
+
         # content may depend on DNT
         patch_vary_headers(response, ('DNT',))
+
         return response

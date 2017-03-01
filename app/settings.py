@@ -333,7 +333,7 @@ if 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
 
 if DEBUG:
     try:
-        importlib("debug_toolbar")
+        import_module("debug_toolbar")
         DEBUG_TOOLBAR = True
     except ImportError:
         DEBUG_TOOLBAR = False
@@ -378,13 +378,13 @@ if DEBUG_TOOLBAR:
     INSTALLED_APPS += (
         'debug_toolbar',
     )
-    MIDDLEWARE_CLASSES += (
+    MIDDLEWARE += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+    ]
     DEBUG_TOOLBAR_CONFIG = {
         'JQUERY_URL': None,
     }
 else:
-    MIDDLEWARE_CLASSES = (
+    MIDDLEWARE = [
         'cms.middleware.utils.ApphookReloadMiddleware',
-    ) + MIDDLEWARE_CLASSES
+    ] + MIDDLEWARE
