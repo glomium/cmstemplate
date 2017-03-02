@@ -114,10 +114,6 @@ module.exports = function makeWebpackConfig () {
           'css-loader?sourceMap!!postcss-loader!sass-loader'
       )
     }, {
-      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-      loader: 'url-loader?limit=100000'
-    /*
-    }, {
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
       // Copy png, jpg, jpeg, gif, svg, woff, woff2, ttf, eot files to output
@@ -125,8 +121,7 @@ module.exports = function makeWebpackConfig () {
       // Pass along the updated reference to your code
       // You can add here any file extension you want to get copied to your output
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-      loader: 'file'
-    */
+      loader: 'file?name=assets/[name]-[md5:hash:hex].[ext]'
     }, {
       // HTML LOADER
       // Reference: https://github.com/webpack/raw-loader

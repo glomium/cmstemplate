@@ -2,7 +2,10 @@
 
 // materialize
 // requires:
-// - npm install roboto-fontface material-design-icons materialize-css --save
+// - npm install roboto-fontface material-design-icons-iconfont materialize-css --save
 
 $roboto-font-path: "../node_modules/roboto-fontface/fonts/Roboto/";
 @import "node_modules/materialize-css/sass/materialize.scss";
+
+$material-design-icons-font-path: "../node_modules/material-design-icons-iconfont/dist/fonts/";
+@import "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss";
