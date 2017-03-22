@@ -4,7 +4,11 @@
 // requires:
 // - npm install material-components-web roboto-fontface material-design-icons-iconfont --save
 
+// - npm install material-components-web roboto-fontface material-design-icons-iconfont normalize-css --save
+
 // TODO: check if material-design-icons is developer friendly and replace mdi-font
+
+@import "normalize-css/normalize";
 
 $roboto-font-path: "../node_modules/roboto-fontface/fonts";
 @import "roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss";
