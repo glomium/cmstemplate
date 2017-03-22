@@ -126,7 +126,7 @@ module.exports = function makeWebpackConfig () {
             loader: 'sass-loader', options: {
               includePaths: [
                 path.join(__dirname, 'src'),
-                path.join('@material'),
+                path.join(__dirname, 'node_modules'),
               ],
               sourceMap: true,
             },
