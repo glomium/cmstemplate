@@ -4,35 +4,12 @@
 // requires:
 // - npm install material-components-web roboto-fontface material-design-icons-iconfont --save
 
-/*
-
 // TODO: check if material-design-icons is developer friendly and replace mdi-font
 
-@import "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface.scss";
-@import "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss";
-// @import "node_modules/material-components-web/material-components-web.scss";
-@import "node_modules/@material/animation/mdc-animation.scss";
-@import "node_modules/@material/button/mdc-button.scss";
-@import "node_modules/@material/card/mdc-card.scss";
-@import "node_modules/@material/checkbox/mdc-checkbox.scss";
-@import "node_modules/@material/dialog/mdc-dialog.scss";
-@import "node_modules/@material/drawer/mdc-drawer.scss";
-@import "node_modules/@material/elevation/mdc-elevation.scss";
-@import "node_modules/@material/fab/mdc-fab.scss";
-@import "node_modules/@material/form-field/mdc-form-field.scss";
-@import "node_modules/@material/grid-list/mdc-grid-list.scss";
-@import "node_modules/@material/icon-toggle/mdc-icon-toggle.scss";
-@import "node_modules/@material/layout-grid/mdc-layout-grid.scss";
-@import "node_modules/@material/list/mdc-list.scss";
-@import "node_modules/@material/menu/mdc-menu.scss";
-@import "node_modules/@material/radio/mdc-radio.scss";
-@import "node_modules/@material/ripple/mdc-ripple.scss";
-@import "node_modules/@material/select/mdc-select.scss";
-@import "node_modules/@material/snackbar/mdc-snackbar.scss";
-@import "node_modules/@material/switch/mdc-switch.scss";
-@import "node_modules/@material/textfield/mdc-textfield.scss";
-@import "node_modules/@material/theme/mdc-theme.scss";
-@import "node_modules/@material/toolbar/mdc-toolbar.scss";
-@import "node_modules/@material/typography/mdc-typography.scss";
+$roboto-font-path: "../node_modules/roboto-fontface/fonts";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss";
 
-*/
+$material-design-icons-font-path: "../node_modules/material-design-icons-iconfont/dist/fonts/";
+@import "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss";
+
+@import "node_modules/material-components-web/material-components-web.scss";
