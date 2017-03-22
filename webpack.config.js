@@ -1,12 +1,22 @@
 'use strict';
 
+const path = require('path');
+const glob = require('glob');
+const webpack = require('webpack');
+
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+/*
+const OUT_PATH = path.resolve('./build');
+// Used with webpack-dev-server
+const PUBLIC_PATH = '/assets/';
+const IS_DEV = process.env.MDC_ENV === 'development';
+const IS_PROD = process.env.MDC_ENV === 'production';
+*/
+
 // Modules
 var autoprefixer = require('autoprefixer');
-var path = require('path');
-var webpack = require('webpack');
-
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /**
