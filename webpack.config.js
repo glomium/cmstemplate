@@ -108,14 +108,12 @@ module.exports = function makeWebpackConfig () {
         fallback: "style-loader",
         use: [
           {
-            loader: 'css-loader',
-            options: {
+            loader: 'css-loader', options: {
                 sourceMap: true,
             },
           },
           {
-            loader: 'postcss-loader',
-            options: {
+            loader: 'postcss-loader', options: {
               plugins: () =>[
                 require('autoprefixer')({
                   grid: false,
@@ -125,8 +123,11 @@ module.exports = function makeWebpackConfig () {
             },
           },
           {
-            loader: 'sass-loader',
-            options: {
+            loader: 'sass-loader', options: {
+              includePaths: [
+                path.join(__dirname, 'src'),
+                path.join('@material'),
+              ],
               sourceMap: true,
             },
           },
