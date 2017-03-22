@@ -100,7 +100,9 @@ module.exports = function makeWebpackConfig () {
       // Transpile .js files using babel-loader
       // Compiles ES6 and ES7 into ES5 code
       test: /\.js$/,
-      loader: 'babel-loader',
+      loader: 'babel-loader',  options: {
+        cacheDirectory: true,
+      },
       exclude: /node_modules/
     }, {
       test: /\.s?css$/,
@@ -182,7 +184,9 @@ module.exports = function makeWebpackConfig () {
 
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
       // Minify all javascript, switch loaders to minimizing mode
-      new webpack.optimize.UglifyJsPlugin({minimize: true}),
+      new webpack.optimize.UglifyJsPlugin({
+        minimize: true,
+      }),
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin

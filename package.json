@@ -28,6 +28,7 @@
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.15.0",
+    "uglify-js": "github:mishoo/UglifyJS2#harmony",
     "url-loader": "^0.5.8",
     "webpack": "^2.3.0",
     "webpack-dev-server": "^2.4.2"
