@@ -15,7 +15,7 @@ const IS_PROD = process.env.MDC_ENV === 'production';
 */
 
 // Modules
-var autoprefixer = require('autoprefixer');
+// var autoprefixer = require('autoprefixer');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -94,35 +94,44 @@ module.exports = function makeWebpackConfig () {
 
   // Initialize module
   config.module = {
-    preLoaders: [],
     loaders: [{
       // JS LOADER
       // Reference: https://github.com/babel/babel-loader
       // Transpile .js files using babel-loader
       // Compiles ES6 and ES7 into ES5 code
       test: /\.js$/,
-      loader: 'babel',
+      loader: 'babel-loader',
       exclude: /node_modules/
     }, {
-      // CSS LOADER
-      // Reference: https://github.com/webpack/css-loader
-      // Allow loading css through js
-      //
-      // Reference: https://github.com/postcss/postcss-loader
-      // Postprocess your css with PostCSS plugins
-      test: /\.css$/,
-      // Reference: https://github.com/webpack/extract-text-webpack-plugin
-      // Extract css files in production builds
-      //
-      // Reference: https://github.com/webpack/style-loader
-      // Use style-loader in development.
-      loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!postcss-loader')
-    }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css-loader?sourceMap!!postcss-loader!sass-loader'
-      )
+      test: /\.s?css$/,
+      loader: ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+                sourceMap: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () =>[
+                require('autoprefixer')({
+                  grid: false,
+                  browsers: ['last 2 version'],
+                })
+              ],
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
+      })
     }, {
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
@@ -140,17 +149,6 @@ module.exports = function makeWebpackConfig () {
       loader: 'html-loader?conservativeCollapse'
     }]
   };
-
-  /**
-   * PostCSS
-   * Reference: https://github.com/postcss/autoprefixer-core
-   * Add vendor prefixes to your css
-   */
-  config.postcss = [
-    autoprefixer({
-      browsers: ['last 2 version']
-    })
-  ];
 
   /**
    * Plugins
@@ -171,7 +169,7 @@ module.exports = function makeWebpackConfig () {
     // Extract css files
     // Disabled when in test mode or not in build mode
     // new ExtractTextPlugin('[name].[hash].css', {disable: !isProd})
-    new ExtractTextPlugin('[name].min.css', {disable: !isProd})
+    new ExtractTextPlugin('[name].min.css')
   )
 
   // Add build specific plugins
@@ -179,11 +177,7 @@ module.exports = function makeWebpackConfig () {
     config.plugins.push(
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
       // Only emit files when there are no errors
-      new webpack.NoErrorsPlugin(),
-
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
-      // Dedupe modules in the output
-      new webpack.optimize.DedupePlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
 
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
       // Minify all javascript, switch loaders to minimizing mode
