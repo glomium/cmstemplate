@@ -112,6 +112,7 @@ module.exports = function makeWebpackConfig () {
           {
             loader: 'css-loader', options: {
                 sourceMap: true,
+                minimize: true,
             },
           },
           {
