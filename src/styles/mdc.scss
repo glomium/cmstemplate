@@ -11,9 +11,7 @@
 @import "normalize-css/normalize";
 
 $roboto-font-path: "../node_modules/roboto-fontface/fonts";
-@import "roboto-fontface/css/roboto/sass/roboto-fontface-light.scss";
-@import "roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss";
-@import "roboto-fontface/css/roboto/sass/roboto-fontface-medium.scss";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface.scss";
 
 $material-design-icons-font-path: "../node_modules/material-design-icons-iconfont/dist/fonts/";
 @import "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss";
