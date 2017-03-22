@@ -2,8 +2,7 @@
   "name": "cmstemplate",
   "version": "1.0.0",
   "scripts": {
-    "build": "rimraf dist && webpack --progress --colors",
-    "build_old": "rimraf dist && webpack --bail --progress --profile",
+    "build": "rimraf media/dist && webpack --progress --colors",
     "server": "webpack-dev-server --inline --hot",
     "start": "npm run server"
   },
