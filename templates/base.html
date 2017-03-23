@@ -1,8 +1,12 @@
 {% load i18n cms_tags menu_tags sekizai_tags staticfiles %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-    <head>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+        <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="robots" content="all" />
         <meta name="author" content="FIXME" />
         <meta name="copyright" content="FIXME, {{ YEAR }}" />
@@ -12,18 +16,12 @@
         <title>FIXME - {% block title %}{% endblock %}</title>
         <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
         <link rel="shortcut icon" href="/favicon.ico" />
-    </head>
-    <body>
-        {% cms_toolbar %}
-        <div id="wrap">
-            {% render_block "body" %}
-            {% block base_content %}{% endblock %}
-        </div>
-        <footer>
-            <div class="container">
-                {% block footer %}{% endblock %}
-            </div>
-        </footer>
-        <script src="{{ MEDIA_URL }}dist/app.min.js"></script>{% render_block "js" %}
-    </body>
+</head>
+<body>
+    {% cms_toolbar %}
+    {% render_block "body" %}
+    {% block base_content %}{% endblock %}
+    {% block base_footer %}{% endblock %}
+    <script src="{{ MEDIA_URL }}dist/app.min.js"></script>{% render_block "js" %}
+</body>
 </html>
