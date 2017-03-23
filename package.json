@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rimraf media/dist && webpack --progress --colors",
+    "watch": "rimraf media/dist && webpack --progress --colors --watch",
     "server": "webpack-dev-server --inline --hot",
     "start": "npm run server"
   },
