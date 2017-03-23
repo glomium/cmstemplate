@@ -1,11 +1,36 @@
 {% extends "template_base.html" %}
 
-{% load cms_tags %}
-{% load menu_tags %}
+{% load cms_tags menu_tags %}
 
-{% block base_content %}<div id="main" class="container"><div class="row">
-    {% block content %}
-    <div class="col-md-3">{% show_menu 1 3 100 100 "cmsplugin_markdown/menu.html" %}</div>
-    <div class="col-md-9" role="main">{% placeholder "content" %}</div>
-    {% endblock %}
-</div></div>{% endblock %}
+{% block base_content %}
+<header class="mdc-toolbar mdc-toolbar--fixed">
+    <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+        <span class="mdc-toolbar__title">Title</span>
+    </section>
+</header>
+
+<div class="mdc-typography demo-content mdc-toolbar-fixed-adjust">
+    <a id="fab" href="/" style="text-decoration: none;" class="mdc-fab material-icons" aria-label="Favorite">
+        <span class="mdc-fab__icon">
+            menu
+        </span>
+    </a>
+    <nav class="mdc-permanent-drawer" style="min-width: 240px">
+        <div class="mdc-list-group">
+            {% show_menu 1 2 0 100 "cmsplugin_markdown/menu.html" %}
+        </div>
+    </nav>
+    <main>
+        {% placeholder "content" %}
+    </main>
+</div>
+{% endblock %}
+
+{% block base_footer %}
+<footer class="mdc-typography">
+    <div class="container">
+        TODO - ADD FOOTER
+        {% block footer %}{% endblock %}
+    </div>
+</footer>
+{% endblock %}

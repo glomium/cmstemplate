@@ -1,0 +1,7 @@
+<nav class="mdc-list">
+{% for child in children %}
+    <a class="mdc-list-item mdc-permanent-drawer--selected" href="{{ child.attr.redirect_url|default:child.get_absolute_url }}">
+        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">{% if child.selected %}label_outline{% else %}chevron_right{% endif %}</i>{{ child.get_menu_title }}
+    </a>
+{% endfor %}
+</nav>
