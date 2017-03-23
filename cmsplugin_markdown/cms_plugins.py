@@ -26,6 +26,7 @@ class MarkdownCMSPlugin(CMSPluginBase):
                 UrlizeExtension(),
                 StrikeThroughExtension(),
                 ChecklistExtension(),
+                'markdown.extensions.admonition',
                 'markdown.extensions.smart_strong',
                 'markdown.extensions.sane_lists',
                 'markdown.extensions.smarty',
