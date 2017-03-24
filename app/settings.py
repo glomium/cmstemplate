@@ -28,7 +28,7 @@ SITE_ID = 1
 ALLOWED_HOSTS = '*'
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
 
-DEBUG = FALSE  # default debug setting
+DEBUG = False  # default debug setting
 
 # Application definition
 
