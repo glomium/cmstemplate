@@ -5,23 +5,44 @@
 {% block base_content %}
 <header class="mdc-toolbar mdc-toolbar--fixed">
     <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-        <span class="mdc-toolbar__title">Title</span>
+        <i class="material-icons" aria-hidden="true">cloud_queue</i>
+        &nbsp;
+        <span class="mdc-toolbar__title">
+            {% page_attribute "page_title" request.current_page.get_root %}
+        </span>
     </section>
 </header>
 
 <div class="mdc-typography demo-content mdc-toolbar-fixed-adjust">
     <a id="fab" href="/" style="text-decoration: none;" class="mdc-fab material-icons" aria-label="Favorite">
         <span class="mdc-fab__icon">
-            menu
+            home
         </span>
     </a>
-    <nav class="mdc-permanent-drawer" style="min-width: 240px">
+    <nav class="mdc-permanent-drawer">
         <div class="mdc-list-group">
+            <ul>
+            {% if request.current_page.soft_root %}
+            {% show_menu 1 1 0 100 "cmsplugin_markdown/menu.html" %}
+            {% else %}
+            {% if request.current_page.is_root %}
+            {% show_menu 0 1 0 100 "cmsplugin_markdown/menu.html" %}
+            {% else %}
             {% show_menu 1 2 0 100 "cmsplugin_markdown/menu.html" %}
+            {% endif %}
+            {% endif %}
+            </ul>
         </div>
     </nav>
     <main>
+        <div class="container">
+        {% if request.current_page.soft_root %}
+        <ul>
+            {% show_menu 1 2 100 100 %}
+        </ul>
+        {% endif %}
         {% placeholder "content" %}
+        </div>
     </main>
 </div>
 {% endblock %}
@@ -29,7 +50,6 @@
 {% block base_footer %}
 <footer class="mdc-typography">
     <div class="container">
-        TODO - ADD FOOTER
         {% block footer %}{% endblock %}
     </div>
 </footer>
