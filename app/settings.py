@@ -28,6 +28,8 @@ SITE_ID = 1
 ALLOWED_HOSTS = '*'
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
 
+DEBUG = FALSE  # default debug setting
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -290,7 +292,7 @@ CMSTEMPLATE_SITEMAPS = {
 # LOCAL SETTINGS ==================================================================
 
 try:
-    from local_settings import *  # NOQA
+    from .local_settings import *  # NOQA
 except ImportError:
     SECRET_KEY = 'just-a-dummy-key-overwrite-it-in:local_settings.py'
 
