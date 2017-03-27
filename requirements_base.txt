@@ -1,39 +1,45 @@
 ### DJANGO BASE
 
-# 2017-02-11: first install
-Django==1.10.5
+# 2017-03-27: update 1.10.5 -> 1.10.6
+Django==1.10.6
 
-# 2017-02-11: first install
+# 2017-03-27: current version
 pip==9.0.1
 
-# 2017-02-11: first install
+# 2017-03-27: current version
 pytz==2016.10
 
 ### DJANGO CMS
 
-# 2017-02-11: first install
+# 2017-03-27: current version
 django-cms==3.4.2
 
-# 2017-02-11: first install
+# 2017-03-27: first install
+djangocms-history==0.3.0
+
+# 2017-03-27: current version
 django-sekizai==0.10.0
 
-# 2017-02-11: first install
+# 2017-03-27: current version
 django-treebeard==4.1.0
 
 ### 3RD PARTY DJANGOCMS
 
 ### DJANGO REST FRAMEWORK
 
-# 2017-02-11: first install
-djangorestframework==3.5.4
+# 2017-03-27: update 3.5.4 -> 3.6.2
+djangorestframework==3.6.2
 
-# 2017-02-11: first install
-coreapi==2.2.4
+# 2017-03-27: update 2.2.4 -> 2.3.0
+coreapi==2.3.0
+
+# 2017-03-27: first install
+Markdown==2.6.8
 
 ### MISC
 
 # 2017-02-11: first install
 python-logstash==0.4.6
 
-# 2017-02-11: first install
-psycopg2==2.6.2
+# 2017-03-27: update 2.6.2 -> 2.7.1
+psycopg2==2.7.1
