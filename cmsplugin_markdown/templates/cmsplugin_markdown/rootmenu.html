@@ -1,0 +1,7 @@
+<ul style="list-style: none;">
+{% for child in children %}
+<li style="display: inline-block;"><a style="color: #fff" href="{{ child.attr.redirect_url|default:child.get_absolute_url }}">
+        {{ child.get_menu_title }}
+    </a></li>
+{% endfor %}
+</ul>

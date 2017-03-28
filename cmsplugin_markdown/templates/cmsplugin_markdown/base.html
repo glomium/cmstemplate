@@ -10,6 +10,7 @@
         <span class="mdc-toolbar__title">
             {% page_attribute "page_title" request.current_page.get_root %}
         </span>
+        {% show_menu 0 0 0 0 "cmsplugin_markdown/rootmenu.html" %}
     </section>
 </header>
 
@@ -22,14 +23,14 @@
     <nav class="mdc-permanent-drawer">
         <div class="mdc-list-group">
             <ul>
-            {% if request.current_page.soft_root %}
-            {% show_menu 1 1 0 100 "cmsplugin_markdown/menu.html" %}
-            {% else %}
             {% if request.current_page.is_root %}
+            {% if request.current_page.is_home %}
             {% show_menu 0 1 0 100 "cmsplugin_markdown/menu.html" %}
             {% else %}
-            {% show_menu 1 2 0 100 "cmsplugin_markdown/menu.html" %}
+            {% show_menu 1 1 0 100 "cmsplugin_markdown/menu.html" %}
             {% endif %}
+            {% else %}
+            {% show_menu 1 2 0 100 "cmsplugin_markdown/menu.html" %}
             {% endif %}
             </ul>
         </div>
@@ -49,7 +50,10 @@
 
 {% block base_footer %}
 <footer class="mdc-typography">
-    <div class="container">
+    <div class="container" style="color: #fff">
+        {% page_attribute "changed_date" as changed_date %}
+        {% page_attribute "changed_by" as changed_by %}
+        {{ changed_date|date:"DATETIME_FORMAT" }} by {{ changed_by.get_full_name|default:changed_by }}
         {% block footer %}{% endblock %}
     </div>
 </footer>
