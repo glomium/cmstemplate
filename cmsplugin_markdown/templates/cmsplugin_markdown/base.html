@@ -52,8 +52,7 @@
 <footer class="mdc-typography">
     <div class="container" style="color: #fff">
         {% page_attribute "changed_date" as changed_date %}
-        {% page_attribute "changed_by" as changed_by %}
-        {{ changed_date|date:"DATETIME_FORMAT" }} by {{ changed_by.get_full_name }}
+        changed: {{ changed_date|date:"DATETIME_FORMAT" }}
         {% block footer %}{% endblock %}
     </div>
 </footer>
