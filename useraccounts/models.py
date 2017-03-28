@@ -73,6 +73,8 @@ class User(AbstractUser):
         """
         Returns the first_name plus the last_name, with a space in between.
         """
+        if not self.first_name or not self.last_name:
+            return self.username
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
