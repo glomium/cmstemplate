@@ -37,6 +37,8 @@ class AuthBackend(ModelBackend):
     def authenticate(self, **kwargs):
         """
         Checks it's kwargs and authenticates user
+
+        also adds a throttle function, which limits the possible login attempts
         """
         # set variables
         model = get_user_model()

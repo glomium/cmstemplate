@@ -33,26 +33,40 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password=None):
+    """
+    BaseUserManager from django.contrib
+
+    updateing create_user and create_superuser so that they don't require
+    a email-address for the creation
+    """
+
+    def _create_user(self, username, password):
+        if not username:
+            raise ValueError('The given username must be set')
+
+        username = self.model.normalize_username(username)
         user = self.model(username=username)
         user.set_password(password)
+
+        return user
+
+    def create_user(self, username, password=None):
+        user = self._create_user(username, password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password):
-        user = self.model(username=username)
+    def create_superuser(self, username, password, **extra_fields):
+        user = self._create_user(username, password)
         user.is_staff = True
-        user.is_valid = True
         user.is_active = True
         user.is_superuser = True
-        user.set_password(password)
         user.save(using=self._db)
         return user
 
 
 @python_2_unicode_compatible
 class User(AbstractUser):
-    is_valid = models.BooleanField(_('valid'), default=False,
+    is_valid = models.BooleanField(_('Has valid email'), default=False,
         help_text=_('Indicates if the user has a valid email address.')
     )
     objects = UserManager()
@@ -81,12 +95,6 @@ class User(AbstractUser):
     def get_short_name(self):
         "Returns the short name for the user."
         return self.username
-
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Sends an email to this User.
-        """
-        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 @python_2_unicode_compatible
