@@ -13,7 +13,7 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    readonly_fields=('email',)
+    readonly_fields=('email', 'is_valid')
     list_display = BaseUserAdmin.list_display + ('is_valid',)
 
 
