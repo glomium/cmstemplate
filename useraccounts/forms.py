@@ -12,8 +12,8 @@ from django.utils.text import capfirst
 
 from .conf import settings
 from .models import Email
-from .validators import validate_password
-from .validators import help_text_password
+# from .validators import validate_password
+# from .validators import help_text_password
 
 
 class AuthenticationForm(forms.Form):

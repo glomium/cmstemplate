@@ -11,8 +11,8 @@ from rest_framework import serializers
 
 from .models import Email
 from .models import User
-from .validators import validate_password
-from .validators import validate_username
+# from .validators import validate_password
+# from .validators import validate_username
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,8 +61,10 @@ class EmailValidate(serializers.Serializer):
         return instance
 
 
+'''
 class UsernameValidate(serializers.Serializer):
     username = fields.CharField(allow_blank=False, trim_whitespace=True)
+
     def validate(self, data):
         """
         """
@@ -72,8 +74,15 @@ class UsernameValidate(serializers.Serializer):
 
 class PasswordValidate(serializers.Serializer):
     password = fields.CharField(allow_blank=False, trim_whitespace=True)
+
     def validate(self, data):
         """
         """
         validate_password(data["password"], self.instance)
         return data
+'''
+
+
+class LoginSerializer(serializers.Serializer):
+    username = fields.CharField(allow_blank=False, trim_whitespace=True)
+    password = fields.CharField(allow_blank=False, trim_whitespace=True)

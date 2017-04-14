@@ -3,39 +3,192 @@
 
 from __future__ import unicode_literals
 
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
-from django.contrib.auth import REDIRECT_FIELD_NAME
+# from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.shortcuts import redirect
+# from django.shortcuts import redirect
 from django.shortcuts import resolve_url
 from django.utils.decorators import method_decorator
-from django.utils.http import is_safe_url
+# from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic.base import TemplateView
-from django.views.generic.list import ListView
+# from django.views.generic.base import TemplateView
+# from django.views.generic.list import ListView
 # from django.views.generic.detail import DetailView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import DeleteView
+# from django.views.generic.edit import CreateView
+# from django.views.generic.edit import DeleteView
 from django.views.generic.edit import FormView
-from django.views.generic.edit import UpdateView
+# from django.views.generic.edit import UpdateView
 
 from .conf import settings as appsettings
-from .forms import AuthenticationForm
+# from .forms import AuthenticationForm
 from .forms import PasswordChangeForm
 from .forms import PasswordSetForm
 from .forms import PasswordRecoverForm
-from .forms import EmailCreateForm
+# from .forms import EmailCreateForm
 from .models import Email
 
+from django.utils.translation import ugettext_lazy as _
 
+from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.decorators import detail_route
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
+
+# from .models import User
+from .permissions import EmailPermissions
+from .serializers import EmailDetailSerializer
+from .serializers import EmailListSerializer
+from .serializers import EmailValidate
+from .serializers import LoginSerializer
+# from .serializers import PasswordValidate
+# from .serializers import UsernameValidate
+# from .serializers import UserSerializer
+# from .validators import help_text_password
+
+
+class EmailViewSet(viewsets.ModelViewSet):
+    """
+    """
+
+    # queryset = Email.objects.all()
+    serializer_class = EmailListSerializer
+    permission_classes = [EmailPermissions]
+    lookup_value_regex = '[\w.@+-]+'
+    lookup_field = "email"
+    lookup_url_kwarg = "email"
+
+    serializers = {
+        'retrieve': EmailDetailSerializer,
+        'update': EmailDetailSerializer,
+        'update_partial': EmailDetailSerializer,
+        'validate': EmailValidate,
+    }
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action, self.serializer_class)
+
+    def get_queryset(self):
+        return self.request.user.emails.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        serializer.instance.send_validation(self.request)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+    @detail_route(methods=['post'])
+    def validate(self, request, pk=None, **kwargs):
+        instance = self.get_object()
+
+        if not instance.is_valid:
+            serializer = self.get_serializer(instance, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({"detail": _("Email is valid")})
+        else:
+            return Response({"detail": _("Email is valid")}, status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['get'])
+    def resend(self, request, pk=None, **kwargs):
+        instance = self.get_object()
+
+        if instance.is_valid:
+            return Response({"detail": _("Email is valid")}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            instance.send_validation(request=self.request)
+            return Response({"detail": _("Validation information send")})
+
+
+class AccountViewSet(viewsets.ViewSet):
+    """
+    """
+
+    serializers = {
+        'login': LoginSerializer,
+        # 'validate_password': PasswordValidate,
+        # 'validate_username': UsernameValidate,
+    }
+
+    def get_serializer(self, *args, **kwargs):
+        return self.serializers.get(self.action)(*args, **kwargs)
+
+    @method_decorator(sensitive_post_parameters())  # TODO: check if functional / needed
+    @list_route(methods=["post"])
+    def login(self, request, **kwargs):
+
+        # Logout old user
+        if self.request.user.is_authenticated():
+            logout(request)
+
+        user = authenticate(username=request.data['username'], password=request.data['password'], request=request)
+
+        if user is None:
+            return Response(
+                {"detail": _("Invalid login - please enter correct login data")},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        login(request, user)
+
+        return Response(
+            {"detail": _("Logged in")},
+            status=status.HTTP_200_OK,
+        )
+
+    @list_route(methods=["get"])
+    def logout(self, request, **kwargs):
+        if self.request.user.is_authenticated():
+            logout(request)
+            return Response({"detail": _("Logged out")})
+        else:
+            return Response({"detail": _("Already logged out")}, status=status.HTTP_400_BAD_REQUEST)
+
+#   @list_route(methods=['get', 'post'])
+#   def validate_password(self, request, **kwargs):
+#       if self.request.method == "GET":
+#           return Response({"help_text": help_text_password()})
+#       else:
+#           serializer = self.get_serializer(instance=self.request.user, data=request.data)
+#           serializer.is_valid(raise_exception=True)
+#           return Response({"detail": _("Password is valid")})
+
+#   @list_route(methods=['post'])
+#   def validate_username(self, request, **kwargs):
+#       # TODO change field to foreign-key adding validation for taken usernames
+#       serializer = self.get_serializer(instance=self.request.user, data=request.data)
+#       serializer.is_valid(raise_exception=True)
+#       return Response({"detail": _("Username is valid")})
+
+
+'''
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_value_regex = '[\w.@+-]+'
+    lookup_field = "username"
+    lookup_url_kwarg = "username"
+
+    @detail_route()
+    def groups(self, request, **kwargs):
+        user = self.get_object()
+        groups = user.groups.all()
+        return Response([group.name for group in groups])
+'''
+
+
+'''
 class LoginView(FormView):
     default_redirect_to = settings.LOGIN_REDIRECT_URL
     form_class = AuthenticationForm
@@ -73,39 +226,10 @@ class LoginView(FormView):
             redirect_to = resolve_url(self.default_redirect_to)
 
         return redirect_to
+'''
 
 
-class LogoutView(TemplateView):
-    next_page = None
-    redirect_field_name = REDIRECT_FIELD_NAME
-    template_name = "useraccounts/logged_out.html"
-
-    def get(self, request, *args, **kwargs):
-
-        logout(request)
-
-        next_page = None
-        if self.next_page is not None:
-            next_page = resolve_url(self.next_page)
-
-        if self.redirect_field_name in request.GET:
-            next_page = self.request.GET.get(self.redirect_field_name)
-            if not is_safe_url(url=next_page, host=request.get_host()):
-                next_page = request.path
-
-        if next_page:
-            return HttpResponseRedirect(next_page)
-
-        return super(LogoutView, self).get(request, *args, **kwargs)
-
-
-class LogoutThenLoginView(LogoutView):
-    """
-    Logs out the user if he is logged in. Then redirects to the log-in page.
-    """
-    next_page = settings.LOGIN_URL
-
-
+'''
 class EmailMixin(object):
 
     @method_decorator(login_required)
@@ -236,6 +360,7 @@ class EmailValidationView(SingleObjectMixin, TemplateView):
         if success_url:
             return HttpResponseRedirect(success_url)
         return super(EmailResendView, self).get(request, *args, **kwargs)
+'''
 
 
 class PasswordRecoverView(FormView):
