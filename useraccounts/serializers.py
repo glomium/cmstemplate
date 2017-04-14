@@ -84,5 +84,5 @@ class PasswordValidate(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = fields.CharField(allow_blank=False, trim_whitespace=True)
+    credentials = fields.CharField(allow_blank=False, trim_whitespace=True)
     password = fields.CharField(allow_blank=False, trim_whitespace=True)

@@ -122,15 +122,18 @@ class AccountViewSet(viewsets.ViewSet):
     def get_serializer(self, *args, **kwargs):
         return self.serializers.get(self.action)(*args, **kwargs)
 
-    @method_decorator(sensitive_post_parameters())  # TODO: check if functional / needed
     @list_route(methods=["post"])
     def login(self, request, **kwargs):
 
         # Logout old user
         if self.request.user.is_authenticated():
-            logout(request)
+            logout(request._request)
 
-        user = authenticate(username=request.data['username'], password=request.data['password'], request=request)
+        user = authenticate(
+            username=request.data['credentials'],
+            password=request.data['password'],
+            request=request._request
+        )
 
         if user is None:
             return Response(
@@ -138,7 +141,7 @@ class AccountViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        login(request, user)
+        login(request._request, user)
 
         return Response(
             {"detail": _("Logged in")},
@@ -148,7 +151,7 @@ class AccountViewSet(viewsets.ViewSet):
     @list_route(methods=["get"])
     def logout(self, request, **kwargs):
         if self.request.user.is_authenticated():
-            logout(request)
+            logout(request._request)
             return Response({"detail": _("Logged out")})
         else:
             return Response({"detail": _("Already logged out")}, status=status.HTTP_400_BAD_REQUEST)

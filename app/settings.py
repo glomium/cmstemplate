@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = "useraccounts.User"
+AUTHENTICATION_BACKENDS = ['useraccounts.backends.AuthBackend']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
