@@ -12,10 +12,17 @@ from django.views.static import serve
 
 from rest_framework.documentation import include_docs_urls
 
+from useraccounts.forms import AuthenticationForm
+
 from importlib import import_module
 from collections import OrderedDict
 
 from .routers import router
+
+
+# We need to use our own login_form, because we require the information about the request
+# to enable the throttling behaviour on login requests (protect us against brute-force) 
+admin.site.login_form = AuthenticationForm
 
 
 SITEMAPS = {}

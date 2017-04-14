@@ -2,8 +2,8 @@ from django.conf import settings
 
 from rest_framework.routers import DefaultRouter
 
-from useraccounts.views import AccountViewSet
 from useraccounts.views import EmailViewSet
+from useraccounts.views import UserViewSet
 
 
 router = DefaultRouter()
@@ -15,5 +15,5 @@ router = DefaultRouter()
 
 
 if "useraccounts" in settings.INSTALLED_APPS:
-    router.register(r"account", AccountViewSet, base_name="account")
-    router.register(r"email", EmailViewSet, base_name="email")
+    router.register(r"email", EmailViewSet, "email")
+    router.register(r"user", UserViewSet, "user")

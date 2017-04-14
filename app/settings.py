@@ -376,6 +376,8 @@ if "material" in INSTALLED_APPS:
 if "MANAGERS" not in globals():
     MANAGERS = ADMINS
 
+if DEBUG:
+    LOGGING['root']['handlers'] += ['console']
 
 if DEBUG_TOOLBAR:
     INSTALLED_APPS += (
