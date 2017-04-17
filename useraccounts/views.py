@@ -140,14 +140,30 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
         if user is None:
             return Response(
-                {"detail": _("Invalid login - please enter correct login data")},
+                {
+                    "message": _("Invalid login - please enter correct login data"),
+                    "user": {
+                        "id": None,
+                        "name": None,
+                        "full_name": None,
+                        "email": None,
+                    },
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         login(request, user)
 
         return Response(
-            {"detail": _("Logged in")},
+            {
+                "message": _("Logged in"),
+                "user": {
+                    "id": user.pk,
+                    "name": user.username,
+                    "full_name": user.get_full_name(),
+                    "email": user.email,
+                },
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -155,9 +171,31 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     def logout(self, request, **kwargs):
         if self.request.user.is_authenticated():
             logout(request)
-            return Response({"detail": _("Logged out")})
+            return Response(
+                {
+                    "message": _("Logged out"),
+                    "user": {
+                        "id": None,
+                        "name": None,
+                        "full_name": None,
+                        "email": None,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
         else:
-            return Response({"detail": _("Already logged out")}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "message": _("Logged out"),
+                    "user": {
+                        "id": None,
+                        "name": None,
+                        "full_name": None,
+                        "email": None,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
 
     @detail_route(methods=["get"])
     def groups(self, request, **kwargs):
@@ -165,49 +203,82 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         groups = user.groups.all()
         return Response([group.name for group in groups])
 
+    '''
+    from __future__ import unicode_literals
+
+    from django.contrib.auth import authenticate
+    from django.utils.translation import ugettext as _
+
+    from .authentication import JWTAuthentication
+    from .utils import payload_handler
+    from .utils import encode_handler
+    from .utils import payload_update
+
+    from rest_framework.exceptions import AuthenticationFailed
+    from rest_framework.response import Response
+    from rest_framework.status import HTTP_400_BAD_REQUEST
+    from rest_framework.status import HTTP_401_UNAUTHORIZED
+    from rest_framework.views import APIView
+
+    permission_classes = ()
+    authentication_classes = ()
+
+    @list_route(methods=["get"])
+    def jwt_verify(self, request, **kwargs):
+        try:
+            auth = JWTAuthentication().authenticate(request)
+        except AuthenticationFailed:
+            return Response({'token': None}, status=HTTP_401_UNAUTHORIZED)
+        if not auth:
+            return Response({'token': None}, status=HTTP_401_UNAUTHORIZED)
+        return Response({'token': auth[1]})
+
+    @list_route(methods=["post"])
+    def jwt_generate(self, request, **kwargs):
+        credentials = dict(request.data.items())
+        credentials['request'] = request
+        user = authenticate(**credentials)
+
+        if user:
+            if not user.is_active:
+                msg = _('User account is disabled.')
+                return Response({'error': msg}, status=HTTP_401_UNAUTHORIZED)
+            return Response({'token': encode_handler(payload_handler(user))})
+
+        msg = _('Unable to login with provided credentials.')
+        return Response({'error': msg}, status=HTTP_400_BAD_REQUEST)
+
+    @list_route(methods=["put"])
+    def jwt_refresh(self, request, **kwargs):
+        try:
+            auth = JWTAuthentication().authenticate(request, payload=True)
+        except AuthenticationFailed:
+            return Response({'token': None}, status=HTTP_401_UNAUTHORIZED)
+        if not auth:
+            return Response({'token': None}, status=HTTP_401_UNAUTHORIZED)
+
+        if not auth[0].is_active:
+            msg = _('User account is disabled.')
+            return Response({'error': msg}, status=HTTP_401_UNAUTHORIZED)
+
+        return Response({'token': encode_handler(payload_update(auth[1]))})
+    '''
+
+    '''
+    @list_route(methods=["post"])
+    def password_recover(self, request, **kwargs):
+        pass
+
+    @list_route(methods=["post"])
+    def password_change(self, request, **kwargs):
+        pass
+
+    @list_route(methods=["post"])
+    def password_set(self, request, **kwargs):
+        pass
+    '''
 
 '''
-class EmailMixin(object):
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(EmailMixin, self).dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return self.request.user.emails.all()
-
-
-class EmailValidationView(SingleObjectMixin, TemplateView):
-    template_name = "useraccounts/email_validation_view.html"
-    success_url = appsettings.REDIRECT_EMAIL_VALIDATE
-    slug_field = 'email'
-    slug_url_kwarg = 'email'
-
-    @method_decorator(never_cache)
-    def dispatch(self, request, *args, **kwargs):
-        return super(EmailValidationView, self).dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return Email.objects.filter(is_valid=False)
-
-    def get_success_url(self):
-        if self.success_url:
-            return resolve_url(self.success_url)
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not self.object.check_validation(self.kwargs.get('stamp', None), self.kwargs.get('crypt', None)):
-            raise Http404
-
-        self.object.validate()
-
-        success_url = self.get_success_url()
-        if success_url:
-            return HttpResponseRedirect(success_url)
-        return super(EmailResendView, self).get(request, *args, **kwargs)
-'''
-
-
 class PasswordRecoverView(FormView):
     """
     """
@@ -310,3 +381,43 @@ class PasswordSetView(SingleObjectMixin, FormView):
 
     def get_success_url(self):
         return resolve_url(self.success_url)
+'''
+
+'''
+class EmailMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailMixin, self).dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        return self.request.user.emails.all()
+
+
+class EmailValidationView(SingleObjectMixin, TemplateView):
+    template_name = "useraccounts/email_validation_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_VALIDATE
+    slug_field = 'email'
+    slug_url_kwarg = 'email'
+
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailValidationView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Email.objects.filter(is_valid=False)
+
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.check_validation(self.kwargs.get('stamp', None), self.kwargs.get('crypt', None)):
+            raise Http404
+
+        self.object.validate()
+
+        success_url = self.get_success_url()
+        if success_url:
+            return HttpResponseRedirect(success_url)
+        return super(EmailResendView, self).get(request, *args, **kwargs)
+'''
