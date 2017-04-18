@@ -169,7 +169,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
     @list_route(methods=["get"])
     def logout(self, request, **kwargs):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             logout(request)
             return Response(
                 {
@@ -179,6 +179,35 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
                         "name": None,
                         "full_name": None,
                         "email": None,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {
+                    "message": _("Logged out"),
+                    "user": {
+                        "id": None,
+                        "name": None,
+                        "full_name": None,
+                        "email": None,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+
+    @list_route(methods=["get"])
+    def account(self, request, **kwargs):
+        if self.request.user.is_authenticated:
+            return Response(
+                {
+                    "message": _("Logged in"),
+                    "user": {
+                        "id": user.pk,
+                        "name": user.username,
+                        "full_name": user.get_full_name(),
+                        "email": user.email,
                     },
                 },
                 status=status.HTTP_200_OK,
