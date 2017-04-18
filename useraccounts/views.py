@@ -198,16 +198,16 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
     @list_route(methods=["get"])
-    def account(self, request, **kwargs):
+    def status(self, request, **kwargs):
         if self.request.user.is_authenticated:
             return Response(
                 {
                     "message": _("Logged in"),
                     "user": {
-                        "id": user.pk,
-                        "name": user.username,
-                        "full_name": user.get_full_name(),
-                        "email": user.email,
+                        "id": self.request.user.pk,
+                        "name": self.request.user.username,
+                        "full_name": self.request.user.get_full_name(),
+                        "email": self.request.user.email,
                     },
                 },
                 status=status.HTTP_200_OK,
@@ -226,10 +226,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_200_OK,
             )
 
-    @detail_route(methods=["get"])
+    @list_route(methods=["get"])
     def groups(self, request, **kwargs):
-        user = self.get_object()
-        groups = user.groups.all()
+        groups = self.request.user.groups.all()
         return Response([group.name for group in groups])
 
     '''
