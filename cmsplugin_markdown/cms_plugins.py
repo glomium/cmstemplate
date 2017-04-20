@@ -32,7 +32,7 @@ class MarkdownCMSPlugin(CMSPluginBase):
                 'markdown.extensions.smart_strong',
                 'markdown.extensions.sane_lists',
                 'markdown.extensions.smarty',
-                'markdown.extensions.table',
+                'markdown.extensions.tables',
             ],
             output_format="html5",
             save_mode='escape',
