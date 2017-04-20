@@ -216,20 +216,9 @@ LOGGING = {
              'class': 'logging.StreamHandler',
              'formatter': 'verbose',
          },
-        'logstash': {
-             'level': 'INFO',
-             'filters': ['require_debug_false'],
-             'class': 'logstash.TCPLogstashHandler',
-             'host': '127.0.0.1',
-             'port': 5959,
-             'version': 1,
-             'message_type': 'django',
-             'fqdn': False,
-             'tags': ["cmstemplate", PROJECT_NAME]
-         },
     },
     'root': {
-        'handlers': ['logstash'],
+        'handlers': [],
         'level': 'INFO',
     },
     'loggers': {
@@ -240,6 +229,21 @@ LOGGING = {
         },
     }
 }
+
+# TODO: add logstash if available
+         # 'logstash': {
+         #     'level': 'INFO',
+         #     'filters': ['require_debug_false'],
+         #     'class': 'logstash.TCPLogstashHandler',
+         #     'host': '127.0.0.1',
+         #     'port': 5959,
+         #     'version': 1,
+         #     'message_type': 'django',
+         #     'fqdn': False,
+         #     'tags': ["cmstemplate", PROJECT_NAME]
+         # },
+
+# TODO: add systemd journal, if available (and not debug)
 
 '''
 # FILER =======================================================================
