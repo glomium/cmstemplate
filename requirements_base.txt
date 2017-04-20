@@ -44,5 +44,8 @@ django_filter==1.0.2
 
 ### MISC
 
+# 2017-03-20: first install
+systemd==0.9.15
+
 # 2017-03-27: update 2.6.2 -> 2.7.1
 psycopg2==2.7.1

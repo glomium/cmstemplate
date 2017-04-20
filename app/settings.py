@@ -193,57 +193,59 @@ LOGGING = {
             'datefmt': "%d/%b/%Y %H:%M:%S",
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s %(message)s',
         },
     },
     'filters': {
         'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
+            '()': 'django.utils.log.RequireDebugFalse',
         },
         'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue'
+            '()': 'django.utils.log.RequireDebugTrue',
         },
     },
     'handlers': {
         'mail_admins': {
+            'class': 'django.utils.log.AdminEmailHandler',
             'level': 'ERROR',
             'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
         },
         'console': {
-             'level': 'DEBUG',
-             'filters': ['require_debug_true'],
-             'class': 'logging.StreamHandler',
-             'formatter': 'verbose',
-         },
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'formatter': 'verbose',
+        },
+        'systemd': {
+            'class': 'systemd.journal.JournaldLogHandler',
+            'level': 'DEBUG',
+        },
     },
     'root': {
-        'handlers': [],
-        'level': 'INFO',
+        'handlers': ['systemd'],
+        'level': 'DEBUG',
     },
     'loggers': {
+        # Log messages related to the handling of requests.
+        # 5XX responses are raised as ERROR messages;
+        # 4XX responses are raised as WARNING messages.
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
+        # # same as django.request, but only for runserver
+        # 'django.server': {
+        #     'handlers': ['console'],
+        #     'propagate': True,
+        # },
+        # log sql performance
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
     }
 }
-
-# TODO: add logstash if available
-         # 'logstash': {
-         #     'level': 'INFO',
-         #     'filters': ['require_debug_false'],
-         #     'class': 'logstash.TCPLogstashHandler',
-         #     'host': '127.0.0.1',
-         #     'port': 5959,
-         #     'version': 1,
-         #     'message_type': 'django',
-         #     'fqdn': False,
-         #     'tags': ["cmstemplate", PROJECT_NAME]
-         # },
-
-# TODO: add systemd journal, if available (and not debug)
 
 '''
 # FILER =======================================================================
