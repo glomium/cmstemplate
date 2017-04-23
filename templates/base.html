@@ -2,20 +2,17 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="Content-Language" content="{{ LANGUAGE_CODE }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Starter Template - Materialize</title>
-        <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="robots" content="all" />
-        <meta name="author" content="FIXME" />
-        <meta name="copyright" content="FIXME, {{ YEAR }}" />
-        <meta name="Content-Language" content="{{ LANGUAGE_CODE }}" />
-        <meta name="language" content="{{ LANGUAGE_CODE }}" />
-        <meta name="description" content="{% block meta-description %}{% endblock %}" />
-        <title>FIXME - {% block title %}{% endblock %}</title>
-        <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
-        <link rel="shortcut icon" href="/favicon.ico" />
+  <meta charset="utf-8">
+  <meta name="robots" content="all" />
+  <meta name="author" content="FIXME" />
+  <meta name="copyright" content="FIXME, {{ YEAR }}" />
+  <meta name="language" content="{{ LANGUAGE_CODE }}" />
+  <meta name="description" content="{% block meta-description %}{% endblock %}" />
+  <title>{{ request.site.name }} - {% block title %}{% endblock %}</title>
+  <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
+  <link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
     {% cms_toolbar %}
