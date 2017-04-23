@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'menus',
     'treebeard',
     'sekizai',
+    'djangocms_history',
 ]
 
 AUTH_USER_MODEL = "useraccounts.User"
