@@ -40,7 +40,7 @@ urlpatterns = [
 ]
 
 
-if getattr(settings, "USE_I18N", False):
+if getattr(settings, "USE_I18N", False) and len(getattr(settings, "LANGUAGES", [])) > 1:
     urlpatterns += i18n_patterns(
         url(r'^admin/', admin.site.urls),
         url(r'^', include('cms.urls')),
