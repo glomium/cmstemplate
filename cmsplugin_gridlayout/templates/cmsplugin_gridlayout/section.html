@@ -1,0 +1,6 @@
+{% load cms_tags %}
+<section id="section-{{ instance.slug }}" class="{{ css }}">
+{% if instance.container %}<div class="{{ instance.get_container }}">{% endif %}
+{% for plugin in instance.child_plugin_instances %}{% render_plugin plugin %}{% endfor %}
+{% if instance.container %}</div>{% endif %}
+</section>

@@ -1,0 +1,80 @@
+$mdc-container-breakpoint-offset: 24px !default;
+
+// @function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+//     $n: index($breakpoint-names, $name);
+//     @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+// }
+@function breakpoint-min($name, $breakpoints: $mdc-layout-grid-breakpoints) {
+    $min: map-get($breakpoints, $name);
+    @return if($min != 0, $min, null);
+}
+@function breakpoint-max($name, $breakpoints: $mdc-layout-grid-breakpoints) {
+    $next: breakpoint-next($name, $breakpoints);
+    @return if($next, breakpoint-min($next, $breakpoints) - 1px, null);
+}
+@mixin media-breakpoint-up($name, $breakpoints: $mdc-layout-grid-breakpoints) {
+    $min: breakpoint-min($name, $breakpoints);
+        @if $min {
+            @media (min-width: $min) {
+                @content;
+            }   
+        } @else {
+            @content;
+        }
+}
+@mixin media-breakpoint-down($name, $breakpoints: $mdc-layout-grid-breakpoints) {
+    $max: breakpoint-max($name, $breakpoints);
+    @if $max {
+        @media (max-width: $max) {
+            @content;
+        }   
+    } @else {
+        @content;
+    }
+}
+
+
+// Responsive visibility utilities
+
+@each $bp in map-keys($grid-breakpoints) {
+    .hidden-#{$bp}-up {
+        @include media-breakpoint-up($bp) {
+            display: none !important;
+        }   
+    }
+    .hidden-#{$bp}-down {
+        @include media-breakpoint-down($bp) {
+            display: none !important;
+        }   
+    }
+}
+
+.container-fluid {
+    width: 100%;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+
+    $prev: null;
+    @each $size in map-keys($mdc-layout-grid-breakpoints) {
+        @if $prev {
+            @if map-get($mdc-layout-grid-breakpoints, $prev) > 0 {
+                @media (min-width: map-get($mdc-layout-grid-breakpoints, $prev)) and (max-width: map-get($mdc-layout-grid-breakpoints, $size) - 1px) {
+                    width: map-get($mdc-layout-grid-breakpoints, $prev) - $mdc-container-breakpoint-offset;
+                }
+            }
+            @else {
+                @media (max-width: map-get($mdc-layout-grid-breakpoints, $size) - 1 ) {
+                    width: 100%;
+                }
+            }
+        }
+        $prev: $size;
+    }
+    @debug $prev;
+    @media (min-width: map-get($mdc-layout-grid-breakpoints, $prev)) {
+        width: map-get($mdc-layout-grid-breakpoints, $prev) - $mdc-container-breakpoint-offset;
+    }
+}
