@@ -1,4 +1,4 @@
-<ul style="list-style: none;">
+<ul style="list-style: none; padding: 4px 0 0 12px; margin: 0">
 {% for child in children %}
 <li style="display: inline-block;"><a style="color: #fff" href="{{ child.attr.redirect_url|default:child.get_absolute_url }}">
         {{ child.get_menu_title }}

@@ -1,5 +1,7 @@
 INSTALLED_APPS = [
+    'cmsplugin_embed',
     'cmsplugin_markdown',
+    'cmsplugin_gridlayout',
 ]
 
 LANGUAGES = [
