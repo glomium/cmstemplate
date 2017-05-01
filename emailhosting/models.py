@@ -23,6 +23,9 @@ from socket import gethostbyname
 # from Crypto.PublicKey import RSA
 
 
+GNAME_DEFAULT = "default"
+
+
 def validate_account_username(value):
     if not re.match(r'^([a-z0-9-._]+)$', value):
         raise ValidationError(_("You can only use small case chars, numbers, the dot and dashes"))
@@ -113,6 +116,7 @@ class Domain(models.Model):
 class Account(models.Model):
     """
     """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     username = models.CharField(_("Username"), max_length=64, null=True, blank=False, db_index=True, unique=True, validators=[validate_account_username])
     password = models.CharField(_("Password"), max_length=64, null=True, blank=True, db_index=True, validators=[validate_account_password])
 
@@ -143,7 +147,7 @@ class Account(models.Model):
         max_length=32,
         null=True,
         blank=False,
-        default="vmail",
+        default=GNAME_DEFAULT,
         validators=[validate_account_groupname],
         editable=False,
         help_text=_('Used to fragment the default user directoryies'),
@@ -164,7 +168,7 @@ class Account(models.Model):
     def clean(self):
         if not self.password:
             self.gen_password()
-        if not self.home:
+        if not self.home and self.gname and self.username:
             self.home = '/var/vmail/' + self.gname + '/' + self.username
 
     class Meta:
