@@ -14,7 +14,7 @@
   <link href="{{ MEDIA_URL }}dist/app.min.css" rel="stylesheet">{% render_block "css" %}
   <link rel="shortcut icon" href="/favicon.ico" />
 </head>
-<body>
+<body ng-app="App">
     {% cms_toolbar %}
     {% render_block "body" %}
     {% block base_content %}{% endblock %}

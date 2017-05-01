@@ -1,0 +1,35 @@
+{% load i18n %}
+<table class="table table-striped table-condensed table-hover">
+    <thead>
+        <tr>
+            <th width="">{% trans "Active" %}</th>
+            <th width="">{% trans "Username" %}</th>
+            <th width="">{% trans "Quota" %}</th>
+            <th width="">{% trans "Project" %}</th>
+            <th width="">{% trans "Customer" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% verbatim %}
+        <tr ng-repeat="obj in data.items">
+            <td>
+                <span ng-if="obj.accept_mail == true" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                <span ng-if="obj.accept_mail == false" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </td>
+            <td>
+                <a href="{{ obj.bmfdetail }}">{{ obj.username }}</a>
+            </td>
+            <td>
+                <span ng-if="obj.quota > 0">{{ obj.quota }} MB</span>
+                <span ng-if="obj.quota == 0">unlimited</span>
+            </td>
+            <td>
+                {{ obj.project_name }}
+            </td>
+            <td>
+                {{ obj.customer_name }}
+            </td>
+        </tr>
+    {% endverbatim %}
+    </tbody>
+</table>
