@@ -26,7 +26,7 @@ PROJECT_NAME = os.environ.get('PROJECT_NAME', os.path.basename(BASE_DIR))
 
 SITE_ID = 1
 ALLOWED_HOSTS = '*'
-INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
+INTERNAL_IPS = ('127.0.0.1', '37.120.177.229')
 
 DEBUG = False  # default debug setting
 
@@ -278,6 +278,7 @@ FILER_STORAGES = {
 
 #TEXT_SAVE_IMAGE_FUNCTION='cmsplugin_filer_image.integrations.ckeditor.create_image_plugin'
 
+'''
 THUMBNAIL_PROCESSORS = (
 
     'easy_thumbnails.processors.colorspace',
@@ -289,7 +290,6 @@ THUMBNAIL_PROCESSORS = (
 )
 
 THUMBNAIL_QUALITY = 90
-'''
 
 # CMS TEMPLATE ====================================================================
 
