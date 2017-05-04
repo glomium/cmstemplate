@@ -169,7 +169,7 @@ class Account(models.Model):
         if not self.password:
             self.gen_password()
         if not self.home and self.gname and self.username:
-            self.home = '/var/vmail/' + self.gname + '/' + self.username
+            self.home = '/opt/vmail/' + self.gname + '/' + self.username
 
     class Meta:
         verbose_name = _('Account')
