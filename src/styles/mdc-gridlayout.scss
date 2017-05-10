@@ -1,9 +1,10 @@
 $mdc-container-breakpoint-offset: 24px !default;
 
-// @function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
-//     $n: index($breakpoint-names, $name);
-//     @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
-// }
+@function breakpoint-next($name, $breakpoints: $mdc-layout-grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+    $n: index($breakpoint-names, $name);
+    @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+}
+
 @function breakpoint-min($name, $breakpoints: $mdc-layout-grid-breakpoints) {
     $min: map-get($breakpoints, $name);
     @return if($min != 0, $min, null);
@@ -36,17 +37,17 @@ $mdc-container-breakpoint-offset: 24px !default;
 
 // Responsive visibility utilities
 
-@each $bp in map-keys($grid-breakpoints) {
-    .hidden-#{$bp}-up {
-        @include media-breakpoint-up($bp) {
-            display: none !important;
-        }   
-    }
-    .hidden-#{$bp}-down {
-        @include media-breakpoint-down($bp) {
-            display: none !important;
-        }   
-    }
+@each $bp in map-keys($mdc-layout-grid-breakpoints) {
+//  .hidden-#{$bp}-up {
+//      @include media-breakpoint-up($bp) {
+//          display: none !important;
+//      }   
+//  }
+//  .hidden-#{$bp}-down {
+//      @include media-breakpoint-down($bp) {
+//          display: none !important;
+//      }   
+//  }
 }
 
 .container-fluid {
@@ -73,7 +74,6 @@ $mdc-container-breakpoint-offset: 24px !default;
         }
         $prev: $size;
     }
-    @debug $prev;
     @media (min-width: map-get($mdc-layout-grid-breakpoints, $prev)) {
         width: map-get($mdc-layout-grid-breakpoints, $prev) - $mdc-container-breakpoint-offset;
     }

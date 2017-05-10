@@ -4,4 +4,4 @@ Disallow: /media/
 Disallow: /static/
 Allow: /
 
-Sitemap: http://www.FIXME.de/sitemap.xml
+Sitemap: http://FIXME/sitemap.xml
