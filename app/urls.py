@@ -36,7 +36,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^apidocs/', include_docs_urls(title="API", description=None)),
     url(r'^sitemap\.xml$', sitemaps_index, {'sitemaps': SITEMAPS}),
-    url(r'^sitemap-(?P<section>\w+)\.xml$', sitemaps_sitemap, {'sitemaps': SITEMAPS}),
+    url(r'^sitemap-(?P<section>\w+)\.xml$', sitemaps_sitemap, {'sitemaps': SITEMAPS}, name="django.contrib.sitemaps.views.sitemap"),
 ]
 
 
