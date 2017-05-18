@@ -221,12 +221,46 @@ post_delete.connect(post_delete_account, sender=Account, dispatch_uid="account_p
 
 
 @python_2_unicode_compatible
+class List(models.Model):
+    """
+    """
+    name = models.CharField(max_length=100, null=False, blank=False)
+    all_members = models.BooleanField(default=True, help_text="all active members are inside this list")
+    only_members = models.BooleanField(default=True, help_text="only members are allowed to join")
+    restricted = models.BooleanField(default=True, help_text="only allowed adresses can write messages")
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
+class Subscriber(models.Model):
+    """
+    """
+    mailinglist = models.ForeignKey(List, blank=False, null=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    email = models.EmailField(blank=True, null=True)
+    can_send = models.BooleanField(default=False, help_text="is allowed to send messages")
+
+    def clean(self):
+        if not self.email and not self.user:
+            raise ValidationError(_("You need an user or email adress"))
+
+    def __str__(self):
+        if self.user:
+            return 'user #%s' % self.user_id
+        else:
+            return self.email
+
+
+@python_2_unicode_compatible
 class Address(models.Model):
     """
     """
     local = models.CharField(_("Local"), max_length=100, null=True, blank=True, help_text=_("Use blank to catch all"), validators=[validate_address_local])
     domain = models.ForeignKey(Domain, null=True, blank=False, related_name="mail_address")
     account = models.ForeignKey(Account, null=True, blank=True, related_name="mail_address")
+    mailinglist = models.ForeignKey(List, null=True, blank=True, related_name="mail_address")
     forward = models.TextField(_("Forward"), null=True, blank=True, validators=[validate_address_forward])
     catchall = models.BooleanField(default=False, editable=False)
     standard = models.BooleanField(default=False)

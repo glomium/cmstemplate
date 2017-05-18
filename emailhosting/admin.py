@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Domain
 from .models import Account
 from .models import Address
+from .models import List
+from .models import Subscriber
 from .forms import HiddenPasswordForm
 
 
@@ -54,3 +56,13 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'account', 'get_forward', 'standard')
     search_fields = ['local', 'account__username']
     ordering = ['local']
+
+
+@admin.register(List)
+class ListAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    pass
