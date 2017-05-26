@@ -1,17 +1,17 @@
 ### DJANGO BASE
 
-# 2017-03-27: update 1.10.5 -> 1.10.6
-Django==1.10.6
+# 2017-05-26: update 1.10.6 -> 1.10.7
+Django==1.10.7
 
 # 2017-03-27: current version
 pip==9.0.1
 
-# 2017-03-27: current version
-pytz==2016.10
+# 2017-05-26: update 2016.10 -> 2017.2
+pytz==2017.2
 
 ### DJANGO CMS
 
-# 2017-03-27: current version
+# 2017-05-26: update 3.4.2 -> 3.4.3
 django-cms==3.4.2
 
 # 2017-03-27: first install
@@ -20,18 +20,18 @@ djangocms-history==0.3.0
 # 2017-03-27: current version
 django-sekizai==0.10.0
 
-# 2017-03-27: current version
-django-treebeard==4.1.0
+# 2017-05-26: update 4.1.0 -> 4.1.1
+django-treebeard==4.1.1
 
 ### 3RD PARTY DJANGOCMS
 
 ### DJANGO REST FRAMEWORK
 
-# 2017-03-27: update 3.5.4 -> 3.6.2
+# 2017-05-26: update 3.6.2 -> 3.6.3
 djangorestframework==3.6.2
 
-# 2017-03-27: update 2.2.4 -> 2.3.0
-coreapi==2.3.0
+# 2017-05-26: update 2.3.0 -> 2.3.1
+coreapi==2.3.1
 
 # 2017-03-27: first install
 Markdown==2.6.8
@@ -39,8 +39,8 @@ Markdown==2.6.8
 # 2017-03-27: first install
 pygments==2.2.0
 
-# 2017-03-27: first install
-django_filter==1.0.2
+# 2017-05-26: update 1.0.2 -> 1.0.4
+django_filter==1.0.4
 
 ### MISC
 
