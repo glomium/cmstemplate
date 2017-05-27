@@ -96,6 +96,14 @@ class User(AbstractUser):
         "Returns the short name for the user."
         return self.username
 
+    def make_email_invalid(self):
+        """
+        Marks the current email-address as invalid
+        """
+        self.is_valid = False
+        self.emails.filter(is_primary=True).update(is_primary=False, is_valid=False, validated=None)
+        self.save()
+
 
 @python_2_unicode_compatible
 class Email(models.Model):
@@ -287,7 +295,7 @@ class Email(models.Model):
             self.user.is_valid = True
             self.is_primary = True
             self.update_primary()
-            user_validated.send(sender=self.__class__, user=self.user)
+            user_validated.send(sender=self.__class__, user=self.user, email=self.email)
             self.user.save()
             logger.info("%s is now valid", self.user)
 

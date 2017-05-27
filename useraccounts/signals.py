@@ -19,7 +19,7 @@ email_changed = Signal(providing_args=['user', 'email'])
 email_validated = Signal(providing_args=['user', 'email'])
 
 # send when the user validates his email address for the first time
-user_validated = Signal(providing_args=['user'])
+user_validated = Signal(providing_args=['user', 'email'])
 
 # send whenever a validation is send
 validation_send = Signal(providing_args=['user', 'email', 'stamp', 'crypt', 'skip'])
