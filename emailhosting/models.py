@@ -266,6 +266,14 @@ class Address(models.Model):
     standard = models.BooleanField(default=False)
 
     def clean(self):
+        if not self.local:
+            self.local = None
+        if not self.get_forward:
+            self.forward = None
+        if not self.account_id:
+            self.account_id = None
+        if not self.mailinglist_id:
+            self.mailinglist_id = None
         if self.forward and not self.local:
             raise ValidationError(_("You can not set a forward with catchall"))
         if self.mailinglist and not self.local:
