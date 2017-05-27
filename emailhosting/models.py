@@ -268,8 +268,10 @@ class Address(models.Model):
     def clean(self):
         if self.forward and not self.local:
             raise ValidationError(_("You can not set a forward with catchall"))
-        if not self.account_id and not self.forward:
-            raise ValidationError(_("You must either define an account or a forward target or both"))
+        if self.mailinglist and not self.local:
+            raise ValidationError(_("You can not create a catchall mailinglist"))
+        if not self.account_id and not self.forward and not self.mailinglist:
+            raise ValidationError(_("You must either define an account or mailinglist or a forward target or both"))
 
     def __str__(self):
         if self.local:
