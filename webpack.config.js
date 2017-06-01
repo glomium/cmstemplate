@@ -192,6 +192,7 @@ module.exports = function makeWebpackConfig () {
   if (isProd) {
     config.plugins.push(
       new webpack.DefinePlugin({
+        'DEBUG': false,
         'process.env': {
           'DEBUG': false,
         }
@@ -201,6 +202,7 @@ module.exports = function makeWebpackConfig () {
   else {
     config.plugins.push(
       new webpack.DefinePlugin({
+        'DEBUG': true,
         'process.env': {
           'DEBUG': true,
         }
@@ -214,9 +216,10 @@ module.exports = function makeWebpackConfig () {
    * Reference: http://webpack.github.io/docs/webpack-dev-server.html
    */
   config.devServer = {
-    contentBase: './src',
     host: '0.0.0.0',
     stats: 'minimal',
+    quiet: true,
+    contentBase: path.join(__dirname, 'src'),
   };
 
   return config;
