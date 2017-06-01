@@ -71,8 +71,8 @@ module.exports = function makeWebpackConfig () {
    * Type of sourcemap to use per build type
    */
   if (isProd) {
-    // config.devtool = 'source-map';
     config.devtool = undefined;
+    // config.devtool = 'source-map';
   } else {
     config.devtool = 'eval-source-map';
   }
@@ -191,7 +191,10 @@ module.exports = function makeWebpackConfig () {
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
       // Minify all javascript, switch loaders to minimizing mode
       new webpack.optimize.UglifyJsPlugin({
-        minimize: true,
+         minimize: true,
+         compress: true,
+         mangle: true,
+         sourcemap: false,
       }),
 
       // Copy assets from the public folder
