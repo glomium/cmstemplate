@@ -87,6 +87,7 @@ module.exports = function makeWebpackConfig () {
   // Initialize module
   config.module = {
     loaders: [{
+
       // JS LOADER
       // Reference: https://github.com/babel/babel-loader
       // Transpile .js files using babel-loader
@@ -97,6 +98,8 @@ module.exports = function makeWebpackConfig () {
       },
       exclude: /node_modules/
     }, {
+
+      // CSS and SCSS LOADER
       test: /\.s?css$/,
       loader: ExtractTextPlugin.extract({
         fallback: "style-loader",
@@ -129,6 +132,7 @@ module.exports = function makeWebpackConfig () {
         ],
       })
     }, {
+
       // ASSET LOADER
       // Reference: https://github.com/webpack/file-loader
       // Copy png, jpg, jpeg, gif, svg, woff, woff2, ttf, eot files to output
@@ -138,11 +142,20 @@ module.exports = function makeWebpackConfig () {
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
       loader: 'file-loader?name=assets/[name].[ext]?[sha1:hash:hex]&publicPath=/media/dist/'
     }, {
+
       // HTML LOADER
       // Reference: https://github.com/webpack/raw-loader
       // Allow loading html through js
       test: /\.html$/,
-      loader: 'html-loader?conservativeCollapse'
+      use: [{
+        loader: 'html-loader',
+        options: {
+          minimize: true,
+          removeComments: true,
+          collapseWhitespace: true,
+        },
+      }]
+
     }]
   };
 
