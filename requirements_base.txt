@@ -12,7 +12,7 @@ pytz==2017.2
 ### DJANGO CMS
 
 # 2017-05-26: update 3.4.2 -> 3.4.3
-django-cms==3.4.2
+django-cms==3.4.3
 
 # 2017-03-27: first install
 djangocms-history==0.3.0
@@ -28,7 +28,7 @@ django-treebeard==4.1.1
 ### DJANGO REST FRAMEWORK
 
 # 2017-05-26: update 3.6.2 -> 3.6.3
-djangorestframework==3.6.2
+djangorestframework==3.6.3
 
 # 2017-05-26: update 2.3.0 -> 2.3.1
 coreapi==2.3.1
