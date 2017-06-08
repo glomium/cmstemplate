@@ -376,10 +376,10 @@ if "cmsplugin_markdown" in INSTALLED_APPS:
         ("cmsplugin_markdown/base.html", gettext("Documentation")),
     ]
 
-if "material" in INSTALLED_APPS:
-    CMS_TEMPLATES += [
-        ("material/base.html", gettext("Material Design")),
-    ]
+if "cmsplugin_material" in INSTALLED_APPS:
+    CMS_TEMPLATES = [
+        ("cmsplugin_material/base.html", gettext("Material Design")),
+    ] + CMS_TEMPLATES
 
 if "MANAGERS" not in globals():
     MANAGERS = ADMINS

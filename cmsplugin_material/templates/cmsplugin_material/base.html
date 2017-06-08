@@ -1,0 +1,89 @@
+{% extends "template_base.html" %}
+
+{% load cms_tags menu_tags %}
+
+{% block base_content %}
+<div id="wrap" style="min-height: 100vh">
+    <header class="mdc-toolbar mdc-toolbar--fixed mdc-toolbar--waterfall mdc-toolbar--flexible mdc-toolbar--flexible-default-behavior">
+        <div class="mdc-toolbar__row">
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+                <i class="material-icons" aria-hidden="true">cloud_queue</i>
+                &nbsp; ###
+                <a href="/">
+                    <span class="mdc-toolbar__title" style="color: #fff; text-decoration: none;">
+                        {% page_attribute "page_title" request.current_page.get_root %}
+                    </span>
+                </a>
+                {% show_menu 0 0 0 0 "cmsplugin_markdown/rootmenu.html" %}
+            </section>
+        </div>
+    </header>
+
+    <div class="mdc-typography demo-content mdc-toolbar-fixed-adjust" style="margin-top:0; padding-top:0">
+        <!--
+        <a id="fab" href="/" style="text-decoration: none;" class="mdc-fab material-icons" aria-label="Favorite">
+            <span class="mdc-fab__icon">
+                home
+            </span>
+        </a>
+        -->
+        <nav class="mdc-permanent-drawer">
+            <div class="mdc-list-group">
+                <ul>
+                {% if request.current_page.is_root %}
+                {% if request.current_page.is_home %}
+                {% show_menu 0 1 0 100 "cmsplugin_markdown/menu.html" %}
+                {% else %}
+                {% show_menu 1 1 0 100 "cmsplugin_markdown/menu.html" %}
+                {% endif %}
+                {% else %}
+                {% show_menu 1 2 0 100 "cmsplugin_markdown/menu.html" %}
+                {% endif %}
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="container">
+            {% if request.current_page.soft_root %}
+            <ul>
+                {% show_menu 1 2 100 100 %}
+            </ul>
+            {% endif %}
+            {% placeholder "content" %}
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block base_footer %}
+<footer class="mdc-typography">
+    <div class="container" style="color: #fff;">
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        asdasd<br>
+        {% page_attribute "changed_date" as changed_date %}
+        Changed: {{ changed_date | date:"DATETIME_FORMAT" }}
+        {% block footer %}{% endblock %}
+    </div>
+</footer>
+{% endblock %}
