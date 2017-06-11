@@ -36,7 +36,10 @@ module.exports = function makeWebpackConfig () {
    */
 
   config.entry = {
-    app: './src/app.js',
+    app: [
+        'babel-polyfill',
+        './src/app.js',
+    ],
   };
 
   /**
@@ -86,17 +89,29 @@ module.exports = function makeWebpackConfig () {
 
   // Initialize module
   config.module = {
-    loaders: [{
+    rules: [{
 
       // JS LOADER
       // Reference: https://github.com/babel/babel-loader
       // Transpile .js files using babel-loader
       // Compiles ES6 and ES7 into ES5 code
       test: /\.js$/,
-      loader: 'babel-loader',  options: {
-        cacheDirectory: true,
-      },
-      exclude: /node_modules/
+      exclude: [
+        path.join(__dirname, 'node_modules'),
+      ],
+      use: [{
+        loader: 'babel-loader',
+        options: {
+            cacheDirectory: true,
+            presets: ["env"],
+            // presets: [["es2015", { modules: false }]],
+            plugins: [
+            //  'transform-object-assign',
+            //  'transform-es2015-block-scoping',
+                'angularjs-annotate',
+            ],
+        }
+      }]
     }, {
 
       // CSS and SCSS LOADER
@@ -112,6 +127,7 @@ module.exports = function makeWebpackConfig () {
           },
           {
             loader: 'postcss-loader', options: {
+              sourceMap: true,
               plugins: () =>[
                 require('autoprefixer')({
                   grid: false,
@@ -122,11 +138,11 @@ module.exports = function makeWebpackConfig () {
           },
           {
             loader: 'sass-loader', options: {
+              sourceMap: true,
               includePaths: [
                 path.join(__dirname, 'src'),
                 path.join(__dirname, 'node_modules'),
               ],
-              sourceMap: true,
             },
           },
         ],
