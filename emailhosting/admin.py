@@ -60,7 +60,8 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(List)
 class ListAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'to_members', 'check_sender', 'is_public')
+    ordering = ['name']
 
 
 @admin.register(Subscriber)

@@ -206,6 +206,8 @@ def post_save_account(sender, instance, created, **kwargs):
                 'localhost',
             ]
         )
+
+
 post_save.connect(post_save_account, sender=Account, dispatch_uid="account_post_save")
 
 
@@ -217,6 +219,8 @@ def post_delete_account(sender, instance, **kwargs):
             instance.pk,
         ]
     )
+
+
 post_delete.connect(post_delete_account, sender=Account, dispatch_uid="account_post_delete")
 
 
@@ -226,11 +230,27 @@ class List(models.Model):
     """
     name = models.CharField(max_length=100, null=False, blank=False)
 
-    to_members = models.BooleanField(default=True, help_text="Send mail to all members")
-    from_members = models.BooleanField(default=True, help_text="All members are allowed to send")
+    to_members = models.BooleanField(
+        default=False,
+        help_text="Send mail to all members",
+    )
 
-    check_sender = models.BooleanField(default=True, help_text="Check sender email address")
-    is_private = models.BooleanField(default=True, help_text="Only members can join private lists")
+    check_sender = models.PositiveSmallIntegerField(
+        choices=(
+            (0, "Allow all senders"),
+            (1, "Allow all members"),
+            (2, "Allow only priviledged addresses"),
+        ),
+        default=2,
+        blank=True,
+        null=False,
+        help_text="Check sender email address"
+    )
+
+    is_public = models.BooleanField(
+        default=False,
+        help_text="Is the list subscribeable from non registered users",
+    )
 
     def __str__(self):
         return self.name
