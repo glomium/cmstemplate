@@ -225,9 +225,12 @@ class List(models.Model):
     """
     """
     name = models.CharField(max_length=100, null=False, blank=False)
-    all_members = models.BooleanField(default=True, help_text="all active members are inside this list")
-    only_members = models.BooleanField(default=True, help_text="only members are allowed to join")
-    restricted = models.BooleanField(default=True, help_text="only allowed adresses can write messages")
+
+    to_members = models.BooleanField(default=True, help_text="Send mail to all members")
+    from_members = models.BooleanField(default=True, help_text="All members are allowed to send")
+
+    check_sender = models.BooleanField(default=True, help_text="Check sender email address")
+    is_private = models.BooleanField(default=True, help_text="Only members can join private lists")
 
     def __str__(self):
         return self.name
@@ -257,7 +260,13 @@ class Subscriber(models.Model):
 class Address(models.Model):
     """
     """
-    local = models.CharField(_("Local"), max_length=100, null=True, blank=True, help_text=_("Use blank to catch all"), validators=[validate_address_local])
+    local = models.CharField(
+        _("Local"),
+        max_length=100,
+        null=True, blank=True,
+        help_text=_("Use blank to catch all"),
+        validators=[validate_address_local],
+    )
     domain = models.ForeignKey(Domain, null=True, blank=False, related_name="mail_address")
     account = models.ForeignKey(Account, null=True, blank=True, related_name="mail_address")
     mailinglist = models.ForeignKey(List, null=True, blank=True, related_name="mail_address")
