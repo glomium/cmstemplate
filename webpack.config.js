@@ -4,6 +4,7 @@ const path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 
+const BabiliPlugin = require("babili-webpack-plugin");
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Modules
@@ -103,7 +104,9 @@ module.exports = function makeWebpackConfig () {
         loader: 'babel-loader',
         options: {
             cacheDirectory: true,
-            presets: ["env"],
+            presets: [["env", {
+                modules: false,
+            }]],
             // presets: [["es2015", { modules: false }]],
             plugins: [
             //  'transform-object-assign',
@@ -200,18 +203,12 @@ module.exports = function makeWebpackConfig () {
   // Add build specific plugins
   if (isProd) {
     config.plugins.push(
+      // Reference: https://github.com/webpack-contrib/babili-webpack-plugin
+      new BabiliPlugin(),
+
       // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
       // Only emit files when there are no errors
       new webpack.NoEmitOnErrorsPlugin(),
-
-      // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-      // Minify all javascript, switch loaders to minimizing mode
-      new webpack.optimize.UglifyJsPlugin({
-         minimize: true,
-         compress: true,
-         mangle: true,
-         sourcemap: false,
-      }),
 
       // Copy assets from the public folder
       // Reference: https://github.com/kevlened/copy-webpack-plugin
@@ -225,9 +222,6 @@ module.exports = function makeWebpackConfig () {
     config.plugins.push(
       new webpack.DefinePlugin({
         'DEBUG': false,
-        'process.env': {
-          'DEBUG': false,
-        }
       })
     )
   }
@@ -235,9 +229,6 @@ module.exports = function makeWebpackConfig () {
     config.plugins.push(
       new webpack.DefinePlugin({
         'DEBUG': true,
-        'process.env': {
-          'DEBUG': true,
-        }
       })
     )
   }
