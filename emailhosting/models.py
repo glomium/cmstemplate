@@ -6,8 +6,10 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from django.contrib.auth import get_user_model
 from django.db import connections
 from django.db import models
+from django.db.utils import IntegrityError
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
@@ -34,6 +36,9 @@ logger = logging.getLogger(__name__)
 
 
 GNAME_DEFAULT = "default"
+
+
+# === VALIDATIONS =============================================================
 
 
 def validate_account_username(value):
@@ -64,15 +69,18 @@ def validate_address_local(value):
     if value and not re.match(r'^([a-z0-9-._]+)$', value):
         raise ValidationError(_("You can only use small case chars, numbers, the dot and dashes"))
     return True
-    
+
 
 def validate_address_forward(value):
     validator = EmailValidator()
     if value:
         for mail in value.splitlines():
-             validator(mail)
+            validator(mail)
     return True
-    
+
+
+# === MODELS ==================================================================
+
 
 @python_2_unicode_compatible
 class Domain(models.Model):
@@ -269,50 +277,41 @@ class List(models.Model):
     def __init__(self, *args, **kwargs):
         super(List, self).__init__(*args, **kwargs)
         self._to_members = self.to_members
+        self._is_public = self.is_public
         self._check_sender = self.check_sender
 
     def save(self, *args, **kwargs):
         ret = super(List, self).save(*args, **kwargs)
-        if self._to_members != self.to_members:
-            # TODO select all active and valid members and add them to the list
-            pass
 
-        if self._check_sender < self.check_sender and self.check_sender in [1,2]:
+        if self._to_members != self.to_members and self.to_members:
+
+            # select all active and valid members and add them to the list
+            for user in get_user_model().objects.filter(is_active=True, is_valid=True):
+                try:
+                    self.subscriber_set.filter(email=user.email, user=None).update(user=user)
+                    self.subscriber_set.create(
+                        user=user,
+                        email=user.email,
+                        can_send=(self.check_sender < 3),
+                    )
+                except IntegrityError:
+                    pass
+
+        if self._check_sender < self.check_sender and self.check_sender in [1, 2]:
             self.update_senders()
+
+        if self._is_public != self.is_public and not self.is_public:
+            self.subscriber_set.filter(user__isnull=True).delete()
 
         return ret
 
     def update_senders(self):
         if self.check_sender == 1:
-            # TODO update all subscribers
-            pass
+            # update all subscribers
+            self.subscriber_set.all().update(can_send=True)
         if self.check_sender == 2:
-            # TODO update all subscribed members
-            pass
-
-
-def user_activated_list(sender, user, **kwargs):
-    logger.debug("ACTIVATE")
-    # TODO update lists with users email to the useraccount
-    # TODO add user to all lists with to_members=True
-
-
-def user_deactivated_list(sender, user, **kwargs):
-    logger.debug("DEACTIVATE")
-    # TODO remove user from all lists with to_members=True
-
-
-def email_changed_list(sender, user, email, **kwargs):
-    logger.debug("CHANGED MAIL")
-    # TODO update lists with users email to the useraccount
-    # TODO delete lists where the user is twice
-    # TODO update email address for all subscriptions of this account
-
-
-user_activated.connect(user_activated_list, dispatch_uid="list_user_activated")
-user_validated.connect(user_activated_list, dispatch_uid="list_user_validated")
-user_deactivated.connect(user_deactivated_list, dispatch_uid="list_user_deactivated")
-email_changed.connect(email_changed_list, dispatch_uid="list_email_changed")
+            # update all subscribed members
+            self.subscriber_set.filter(user__isnull=False).update(can_send=True)
 
 
 @python_2_unicode_compatible
@@ -330,12 +329,19 @@ class Subscriber(models.Model):
         ]
 
     def clean(self):
+
+        if self.user and self.user.is_valid and self.user.email:
+            self.email = self.user
+
         if not self.email and not self.user:
             raise ValidationError(_("You need an user or email adress"))
 
+        if self.mailinglist.check_sender < 3 and self.user or self.mailinglist.check_sender < 2 and not self.user:
+            self.can_send = True
+
     def __str__(self):
         if self.user:
-            return 'user #%s' % self.user_id
+            return '%s #%s' % (self.email, self.user_id)
         else:
             return self.email
 
@@ -402,6 +408,8 @@ def pre_save_address(sender, instance, **kwargs):
         instance.catchall = True
         instance.standard = False
         instance.local = None
+
+
 pre_save.connect(pre_save_address, sender=Address, dispatch_uid="address_pre_save")
 
 
@@ -446,6 +454,8 @@ def post_save_address(sender, instance, created, **kwargs):
                 instance.pk,
             ]
         )
+
+
 post_save.connect(post_save_address, sender=Address, dispatch_uid="address_post_save")
 
 
@@ -457,4 +467,86 @@ def post_delete_address(sender, instance, **kwargs):
             instance.pk,
         ]
     )
+
+
 post_delete.connect(post_delete_address, sender=Address, dispatch_uid="address_post_delete")
+
+
+# === SIGNAL LOGIC ============================================================
+
+
+def user_activated_list(sender, user, **kwargs):
+    logger.debug("ACTIVATE USER ON MAILINGLISTS")
+
+    # udate email adresses without user instance
+    Subscriber.objects.filter(email=user.email, user__isnull=True).update(user=user)
+
+    # add user automatically to mailinglists
+    for mailinglist in List.objects.filter(to_members=True):
+        mailinglist.subscriber_set.create(
+            user=user,
+            email=user.email,
+            can_send=mailinglist.check_sender < 3
+        )
+
+    # update permissions
+    Subscriber.objects.filter(
+        user=user,
+        can_send=False,
+        mailinglist__check_sender__lt=3
+    ).update(can_send=True)
+
+
+def user_deactivated_list(sender, user, **kwargs):
+    logger.debug("DEACTIVATE USER FROM MAILINGLIST")
+
+    # remove user from all lists with is_public=False
+    Subscriber.objects.filter(user=user, mailinglist__is_public=False).delete()
+
+    # remove permissions with lists which allow all members to publish
+    Subscriber.objects.filter(
+        user=user,
+        can_send=True,
+        mailinglist__check_sender=2
+    ).update(can_send=False)
+
+
+def email_changed_list(sender, user, email, **kwargs):
+    logger.debug("CHANGE USER MAIL ON MAILINGLISTS")
+
+    # update email adresses without user instance
+    Subscriber.objects.filter(email=email, user__isnull=True).update(user=user)
+
+    # update email address for all subscriptions of this account
+    for acc in Subscriber.objects.filter(user=user):
+        acc.email = email
+
+        try:
+            acc.save()
+
+        except IntegrityError:
+
+            perm = max(Subscriber.objects.filter(
+                user=user,
+                mailinglist=acc.mailinglist
+            ).values_list("can_send", flat=True))
+
+            # delete lists where the user is twice
+            Subscriber.objects.filter(
+                user=user,
+                mailinglist=acc.mailinglist
+            ).exclude(
+                id=acc.id
+            ).delete()
+
+            acc.can_send = perm
+            acc.save()
+
+
+# === CONNECT SIGNALS =========================================================
+
+
+user_activated.connect(user_activated_list, dispatch_uid="list_user_activated")
+user_validated.connect(user_activated_list, dispatch_uid="list_user_validated")
+user_deactivated.connect(user_deactivated_list, dispatch_uid="list_user_deactivated")
+email_changed.connect(email_changed_list, dispatch_uid="list_email_changed")
