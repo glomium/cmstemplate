@@ -24,7 +24,7 @@ class UserAdmin(BaseUserAdmin):
             rows += 1
 
         if rows == 1:
-            self.message_user(request, "One useraccount status was successfully updated to invalid email address." % rows)
+            self.message_user(request, "One useraccount status was successfully updated to invalid email address.")
         else:
             self.message_user(request, "%s useraccounts were successfully updated to invalid email addresses status." % rows)
 

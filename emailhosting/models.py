@@ -11,16 +11,26 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
+# from django.dispatch import receiver
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
+from useraccounts.signals import email_changed
+from useraccounts.signals import user_activated
+from useraccounts.signals import user_deactivated
+from useraccounts.signals import user_validated
+
+import logging
 import re
 
 from random import choice
-from socket import getfqdn
-from socket import gethostbyname
+# from socket import getfqdn
+# from socket import gethostbyname
 # from Crypto.PublicKey import RSA
+
+
+logger = logging.getLogger(__name__)
 
 
 GNAME_DEFAULT = "default"
@@ -238,10 +248,11 @@ class List(models.Model):
     check_sender = models.PositiveSmallIntegerField(
         choices=(
             (0, "Allow all senders"),
-            (1, "Allow all members"),
-            (2, "Allow only priviledged addresses"),
+            (1, "Allow all subscribers"),
+            (2, "Allow all members"),
+            (3, "Allow only priviledged subscribers"),
         ),
-        default=2,
+        default=3,
         blank=True,
         null=False,
         help_text="Check sender email address"
@@ -249,11 +260,59 @@ class List(models.Model):
 
     is_public = models.BooleanField(
         default=False,
-        help_text="Is the list subscribeable from non registered users",
+        help_text="Is the list subscribable from non registered users",
     )
 
     def __str__(self):
         return self.name
+
+    def __init__(self, *args, **kwargs):
+        super(List, self).__init__(*args, **kwargs)
+        self._to_members = self.to_members
+        self._check_sender = self.check_sender
+
+    def save(self, *args, **kwargs):
+        ret = super(List, self).save(*args, **kwargs)
+        if self._to_members != self.to_members:
+            # TODO select all active and valid members and add them to the list
+            pass
+
+        if self._check_sender < self.check_sender and self.check_sender in [1,2]:
+            self.update_senders()
+
+        return ret
+
+    def update_senders(self):
+        if self.check_sender == 1:
+            # TODO update all subscribers
+            pass
+        if self.check_sender == 2:
+            # TODO update all subscribed members
+            pass
+
+
+def user_activated_list(sender, user, **kwargs):
+    logger.debug("ACTIVATE")
+    # TODO update lists with users email to the useraccount
+    # TODO add user to all lists with to_members=True
+
+
+def user_deactivated_list(sender, user, **kwargs):
+    logger.debug("DEACTIVATE")
+    # TODO remove user from all lists with to_members=True
+
+
+def email_changed_list(sender, user, email, **kwargs):
+    logger.debug("CHANGED MAIL")
+    # TODO update lists with users email to the useraccount
+    # TODO delete lists where the user is twice
+    # TODO update email address for all subscriptions of this account
+
+
+user_activated.connect(user_activated_list, dispatch_uid="list_user_activated")
+user_validated.connect(user_activated_list, dispatch_uid="list_user_validated")
+user_deactivated.connect(user_deactivated_list, dispatch_uid="list_user_deactivated")
+email_changed.connect(email_changed_list, dispatch_uid="list_email_changed")
 
 
 @python_2_unicode_compatible
@@ -264,6 +323,11 @@ class Subscriber(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     email = models.EmailField(blank=True, null=True)
     can_send = models.BooleanField(default=False, help_text="is allowed to send messages")
+
+    class Meta:
+        unique_together = [
+            ('mailinglist', 'email'),
+        ]
 
     def clean(self):
         if not self.email and not self.user:

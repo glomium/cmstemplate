@@ -6,13 +6,13 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+# from django.contrib.auth.models import PermissionsMixin
 from django.core.mail.message import EmailMultiAlternatives
 from django.core.signing import BadSignature
 from django.core.signing import SignatureExpired
 from django.core.signing import TimestampSigner
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import NoReverseMatch
+# from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -23,6 +23,8 @@ from django.utils.translation import ugettext_lazy as _
 from .conf import settings as appsettings
 from .signals import email_changed
 from .signals import email_validated
+from .signals import user_activated
+from .signals import user_deactivated
 from .signals import user_validated
 from .signals import validation_send
 from .signals import password_restore_send
@@ -104,11 +106,31 @@ class User(AbstractUser):
         self.emails.filter(is_primary=True).update(is_primary=False, is_valid=False, validated=None)
         self.save()
 
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
+        if self.pk:
+            self._original_active = self.is_active
+        else:
+            self._original_active = False
+
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+        if not self._original_active and self.is_active:
+            user_activated.send(sender=self.__class__, user=self)
+        if self._original_active and not self.is_active:
+            user_deactivated.send(sender=self.__class__, user=self)
+
 
 @python_2_unicode_compatible
 class Email(models.Model):
     email = models.EmailField(_('Email Address'), blank=False, db_index=True, null=False, unique=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="emails", null=False, blank=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="emails",
+        null=False,
+        blank=False,
+    )
 
     is_primary = models.BooleanField(
         _('primary'),
@@ -248,7 +270,10 @@ class Email(models.Model):
                     message.body = plain.render(context).strip()
                 message.send()
             else:
-                logger.critical("No subject or text provided for password restore. Sending validation-mail to %s aborted", self.email)
+                logger.critical(
+                    "No subject or text provided for password restore. Sending validation-mail to %s aborted",
+                    self.email,
+                )
 
         password_restore_send.send(sender=self.__class__, user=self.user, email=self.email, stamp=stamp, crypt=crypt, skip=skip)
         logger.info("%s has requested a password restore for %s", self.user, self.email)
@@ -280,6 +305,8 @@ class Email(models.Model):
         if self.is_primary and self.user.email != self.email:
             self.user.email = self.email
             if self.is_valid:
+                if not self.user.is_valid:
+                    user_validated.send(sender=self.__class__, user=self.user)
                 self.user.is_valid = True
             self.user.save()
 
@@ -295,7 +322,7 @@ class Email(models.Model):
             self.user.is_valid = True
             self.is_primary = True
             self.update_primary()
-            user_validated.send(sender=self.__class__, user=self.user, email=self.email)
+            user_validated.send(sender=self.__class__, user=self.user)
             self.user.save()
             logger.info("%s is now valid", self.user)
 
