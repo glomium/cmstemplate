@@ -19,7 +19,7 @@ import angular from 'angular';
     Full angular app:
     <auth-component></auth-component>
 
-    On user-change refresh HTTP
+    On user-change refresh HTTP:
     <auth-component auto-refresh></auth-component>
     
 */
@@ -228,6 +228,7 @@ class AuthService {
 
 const AuthComponent = {
     bindings: {
+        refresh1: '@?',
         autoRefresh: '@?',
     },
     controller: class AuthCtrl {
@@ -236,7 +237,7 @@ const AuthComponent = {
         constructor($scope, $window, AuthService) {
             if (DEBUG) console.log("AuthCtrl: constructor");
 
-            var $this = this;
+            var $this = this
 
             $this.user = AuthService.user;
             $scope.user = AuthService.user;
@@ -277,7 +278,7 @@ const AuthComponent = {
         }
     },
     transclude: true,
-    template: '{{ user }}<br><input type="text" ng-model="credentials"><input type="password" ng-model="password"><button ng-click="logout()">logout</button><button ng-click="login()">login</button>',
+    templateUrl: 'component/auth.html?' + BUILD,
 }
 
 let AuthModule = angular

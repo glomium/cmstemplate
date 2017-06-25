@@ -18,10 +18,11 @@ from importlib import import_module
 from collections import OrderedDict
 
 from .routers import router
+from .views import AngularTemplateView
 
 
 # We need to use our own login_form, because we require the information about the request
-# to enable the throttling behaviour on login requests (protect us against brute-force) 
+# to enable the throttling behaviour on login requests (protect us against brute-force)
 admin.site.login_form = AuthenticationForm
 
 
@@ -36,19 +37,26 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^apidocs/', include_docs_urls(title="API", description=None)),
     url(r'^sitemap\.xml$', sitemaps_index, {'sitemaps': SITEMAPS}),
-    url(r'^sitemap-(?P<section>\w+)\.xml$', sitemaps_sitemap, {'sitemaps': SITEMAPS}, name="django.contrib.sitemaps.views.sitemap"),
+    url(
+        r'^sitemap-(?P<section>\w+)\.xml$',
+        sitemaps_sitemap,
+        {'sitemaps': SITEMAPS},
+        name="django.contrib.sitemaps.views.sitemap"
+    ),
 ]
 
 
 if getattr(settings, "USE_I18N", False) and len(getattr(settings, "LANGUAGES", [])) > 1:
     urlpatterns += i18n_patterns(
         url(r'^admin/', admin.site.urls),
+        url(r'^component/(?P<path>.*)$', AngularTemplateView.as_view()),
         url(r'^', include('cms.urls')),
         prefix_default_language=True,
     )
 else:
     urlpatterns += [
         url(r'^admin/', admin.site.urls),
+        url(r'^component/(?P<path>.*)$', AngularTemplateView.as_view()),
         url(r'^', include('cms.urls')),
     ]
 
