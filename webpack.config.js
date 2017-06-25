@@ -221,7 +221,7 @@ module.exports = function makeWebpackConfig () {
     config.plugins.push(
         new webpack.DefinePlugin({
             'DEBUG': !(ENV === 'build'),
-            'BUILD': JSON.stringify(require("package.json").version),
+            'BUILD': JSON.stringify(require(path.join(__dirname, 'package.json')).version),
         })
     )
 
