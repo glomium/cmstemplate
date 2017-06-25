@@ -85,19 +85,6 @@ class User(AbstractUser):
         stamp, crypt = email.send_validation(request, skip)
         return {"email": email, "stamp": stamp, "crypt": crypt}
 
-    def get_full_name(self):
-        """
-        Returns the first_name plus the last_name, with a space in between.
-        """
-        if not self.first_name or not self.last_name:
-            return self.username
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
-
-    def get_short_name(self):
-        "Returns the short name for the user."
-        return self.username
-
     def make_email_invalid(self):
         """
         Marks the current email-address as invalid

@@ -218,20 +218,12 @@ module.exports = function makeWebpackConfig () {
     )
   }
 
-  if (isProd) {
     config.plugins.push(
-      new webpack.DefinePlugin({
-        'DEBUG': false,
-      })
+        new webpack.DefinePlugin({
+            'DEBUG': !(ENV === 'build'),
+            'BUILD': JSON.stringify(require("package.json").version),
+        })
     )
-  }
-  else {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'DEBUG': true,
-      })
-    )
-  }
 
   /**
    * Dev server configuration

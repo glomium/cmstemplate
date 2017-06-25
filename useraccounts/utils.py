@@ -3,17 +3,22 @@
 
 from __future__ import unicode_literals
 
-from djangobmf.conf import settings
-
 from datetime import datetime
 from datetime import timedelta
 
 import jwt
 
+from .conf import settings
 
-def payload_handler(user):
+
+def get_payload(user):
     payload = {
-        'username': user.natural_key(),
+        'user': {
+            'id': user.pk,
+            'name': user.username,
+            'full_name': user.get_full_name() or None,
+            'email': user.email or None,
+        },
         'iat': datetime.utcnow(),
         'exp': datetime.utcnow() + timedelta(seconds=settings.AUTH_EXPIRATION_DELTA),
     }
@@ -26,13 +31,13 @@ def payload_handler(user):
 
     return payload
 
-
+'''
 def payload_update(payload):
     payload.update({
         'exp': datetime.utcnow() + timedelta(seconds=settings.AUTH_EXPIRATION_DELTA),
     })
     return payload
-
+'''
 
 def decode_handler(token):
     return jwt.decode(

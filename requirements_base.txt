@@ -55,3 +55,6 @@ psycopg2==2.7.1
 
 # 2017-03-20: first install
 pylibmc==1.5.2
+
+# 2017-06-25: first install
+pyjwt==1.5.2

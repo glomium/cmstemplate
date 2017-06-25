@@ -34,6 +34,8 @@ from .forms import PasswordSetForm
 from .forms import PasswordRecoverForm
 # from .forms import EmailCreateForm
 from .models import Email
+from .utils import get_payload
+from .utils import encode_handler
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -125,12 +127,51 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializer_class)
 
-    @list_route(methods=["post"])
-    def login(self, request, **kwargs):
+    @list_route(methods=["get"])
+    def groups(self, request, **kwargs):
+        groups = self.request.user.groups.all()
+        return Response([group.name for group in groups])
 
-        # Logout old user
-        if self.request.user.is_authenticated():
+
+class JWTViewSet(viewsets.ViewSet):
+    """
+    A ViewSet to get and refresh JWT Tokens
+    """
+    
+    @list_route(methods=['put', 'get', 'delete'], url_path='')
+    def token(self, request):
+        if request.method == 'GET':
+            return self.get_token(request)
+        elif request.method == 'PUT':
+            return self.generate_token(request)
+        elif request.method == 'DELETE':
+            return self.delete_token(request)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def get_token(self, request):
+        if self.request.user.is_authenticated:
+            # TODO: Add signal
+            payload = encode_handler(get_payload(self.request.user))
+            return Response(payload, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def delete_token(self, request):
+        if self.request.user.is_authenticated:
             logout(request)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_200_OK)
+
+    def generate_token(self, request):
+
+        # logout user if logged in
+        if self.request.user.is_authenticated:
+            logout(request)
+
+        if not "credentials" in request.data and not "password" in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(
             username=request.data['credentials'],
@@ -140,96 +181,13 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
         if user is None:
             return Response(
-                {
-                    "message": _("Invalid login - please enter correct login data"),
-                    "user": {
-                        "id": None,
-                        "name": None,
-                        "full_name": None,
-                        "email": None,
-                    },
-                },
-                status=status.HTTP_400_BAD_REQUEST,
+                _("Please enter valid login informations"),
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         login(request, user)
 
-        return Response(
-            {
-                "message": _("Logged in"),
-                "user": {
-                    "id": user.pk,
-                    "name": user.username,
-                    "full_name": user.get_full_name(),
-                    "email": user.email,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    @list_route(methods=["get"])
-    def logout(self, request, **kwargs):
-        if self.request.user.is_authenticated:
-            logout(request)
-            return Response(
-                {
-                    "message": _("Logged out"),
-                    "user": {
-                        "id": None,
-                        "name": None,
-                        "full_name": None,
-                        "email": None,
-                    },
-                },
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(
-                {
-                    "message": _("Logged out"),
-                    "user": {
-                        "id": None,
-                        "name": None,
-                        "full_name": None,
-                        "email": None,
-                    },
-                },
-                status=status.HTTP_200_OK,
-            )
-
-    @list_route(methods=["get"])
-    def status(self, request, **kwargs):
-        if self.request.user.is_authenticated:
-            return Response(
-                {
-                    "message": _("Logged in"),
-                    "user": {
-                        "id": self.request.user.pk,
-                        "name": self.request.user.username,
-                        "full_name": self.request.user.get_full_name(),
-                        "email": self.request.user.email,
-                    },
-                },
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(
-                {
-                    "message": _("Logged out"),
-                    "user": {
-                        "id": None,
-                        "name": None,
-                        "full_name": None,
-                        "email": None,
-                    },
-                },
-                status=status.HTTP_200_OK,
-            )
-
-    @list_route(methods=["get"])
-    def groups(self, request, **kwargs):
-        groups = self.request.user.groups.all()
-        return Response([group.name for group in groups])
+        return self.get_token(request)
 
     '''
     from __future__ import unicode_literals

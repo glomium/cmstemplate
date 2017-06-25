@@ -45,13 +45,6 @@ class Settings(object):
         "RESTORE_TEMPLATE_PLAIN": "useraccounts/email_restore.txt",
         "RESTORE_TEMPLATE_SUBJECT": "useraccounts/email_restore.subject",
 
-        "AUTH_EXPIRATION_DELTA": 600,
-        "AUTH_HEADER_PREFIX": "JWT",
-        "AUTH_SECRET_KEY": djsettings.SECRET_KEY,
-        "AUTH_ISSUER": None,
-        "AUTH_AUDIENCE": None,
-        "AUTH_ALGORITHMS": ["HS256"],
-
         # resolve views
         "RESTORE_AUTOLOGIN": True,
         "RESOLVE_EMAIL_VALIDATE": None,
@@ -67,6 +60,13 @@ class Settings(object):
         "REDIRECT_RESTORE_SUCCESS": djsettings.LOGIN_REDIRECT_URL,
 
         "REDIRECT_CHANGE_SUCCESS": djsettings.LOGIN_REDIRECT_URL,
+
+        "AUTH_EXPIRATION_DELTA": 300,
+        "AUTH_HEADER_PREFIX": "JWT",
+        "AUTH_SECRET_KEY": djsettings.SECRET_KEY,
+        "AUTH_ISSUER": None,
+        "AUTH_AUDIENCE": None,
+        "AUTH_ALGORITHMS": ["HS256"],
 
         # username
         "USERNAME_VALIDATORS": [
