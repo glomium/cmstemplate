@@ -170,7 +170,7 @@ class JWTViewSet(viewsets.ViewSet):
         if self.request.user.is_authenticated:
             logout(request)
 
-        if not "credentials" in request.data and not "password" in request.data:
+        if not "credentials" in request.data or not "password" in request.data:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(
