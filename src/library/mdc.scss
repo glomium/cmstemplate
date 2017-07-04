@@ -64,7 +64,6 @@ $mdc-layout-grid-default-column-span: 12;
         $container: map-get($mdc-layout-grid-container, $size);
         $gutter: map-get($mdc-layout-grid-default-gutter, $size);
 
-
         // lower breakpoint
         @if $min == null and $max != null {
             @media (max-width: $max) {
@@ -91,7 +90,6 @@ $mdc-layout-grid-default-column-span: 12;
 
         // upper breakpoint
         @else if $min != null and $max == null {
-            // Desktop
             @media (min-width: $min) {
                 padding-right: ($gutter / 2);
                 padding-left: ($gutter / 2);
