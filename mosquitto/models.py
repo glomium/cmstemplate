@@ -31,19 +31,14 @@ class ACL(models.Model):
             (1, _("Subscribe")),
             (2, _("Subscribe and Publish")),
         ),
-        default=1
+        default=1,
+        db_index=True,
     )
 
     active = models.BooleanField(_("Is active"), default=True, db_index=True)
 
     def __str__(self):
         return '%s' % (self.topic)
-
-    def clean(self):
-        if not self.password:
-            self.gen_password()
-        if not self.home and self.gname and self.username:
-            self.home = '/opt/vmail/' + self.gname + '/' + self.username
 
     class Meta:
         verbose_name = _('Access Control List')
