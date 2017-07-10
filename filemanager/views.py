@@ -10,13 +10,74 @@ from django.http import FileResponse
 from django.views.generic import View
 
 from mimetypes import MimeTypes
+from PIL import Image
+
+from .conf import MIME_TYPES_IMAGES
 
 import os
 
 
-class FileManagerView(View):
+class ImageManagerView(View):
 
     def get(self, request, path=None, *args, **kwargs):
+
+        full_path = path
+
+        if not path:
+            raise Http404
+
+        # TODO: read x, y from database
+        # TODO: dont remove x, y from name unless image changes also delete cache
+        # read formatter, breakpoint, x and y from image path
+        try:
+            formatter, breakpoint, path = path.split('/', 2)
+            tmp, x, y = path.rsplit('_', 2)
+            y, ext = y.split('.', 1)
+            x = int(x)
+            y = int(y)
+            path = tmp + '.' + ext
+        except ValueError:
+            return HttpResponse(status=400)
+
+        filepath = os.path.join(settings.FILEMANAGER_ROOT, path)
+        mime_type = MimeTypes().guess_type(filepath)[0]
+
+        if not os.path.exists(filepath) or not os.path.isfile(filepath):
+            raise Http404("Could not find %s" % path)
+
+        if not mime_type in MIME_TYPES_IMAGES:
+            return HttpResponse(status=400)
+
+        cachepath = os.path.join(settings.FILEMANAGER_CACHE_ROOT, full_path)
+
+        # TODO: check formatter
+
+        # TODO: check breakpoint
+
+        # create directories
+        if not os.path.isdir(os.path.dirname(cachepath)):
+            os.makedirs(os.path.dirname(cachepath))
+
+        filename = os.path.basename(cachepath)
+
+        # TODO USE FORMATTER
+        img = Image.open(filepath)
+        img.thumbnail((x, y))
+        img.save(cachepath)
+
+        response = FileResponse(open(cachepath, 'rb'))
+        response['Content-Type'] = mime_type
+        response['Content-Length'] = os.path.getsize(cachepath)
+
+        return response
+
+
+class FileManagerView(View):
+    """
+    """
+
+    def get(self, request, path=None, *args, **kwargs):
+
         if not path:
             raise Http404
 
@@ -38,38 +99,41 @@ class FileManagerView(View):
         return HttpResponse(status=500)
 
     def get_file(self, request, path, filepath):
+        """
+        """
 
         mime_type = MimeTypes().guess_type(filepath)[0]
+
+        download = "d" in request.GET
 
         sendtype = getattr(settings, "FILEMANAGER_SENDTYPE", None)
         filename = os.path.basename(filepath)
         fileurl = os.path.join(settings.FILEMANAGER_URL, path)
 
+        response = None
+
         # Nginx (TODO: untested)
         if sendtype == "xaccel" and not settings.DEBUG:
             response = HttpResponse()
-            # response['Content-Type'] = 'application/force-download'
-            # response['Content-Disposition'] = 'inline; filename=%s' % filename
             response['X-Accel-Redirect'] = fileurl
-            return response
 
         # Lighthttpd or Apache with mod_xsendfile (TODO: untested)
         if sendtype == "xsendfile" and not settings.DEBUG:
             response = HttpResponse()
-            # response['Content-Type'] = 'application/force-download'
-            # response['Content-Disposition'] = 'inline; filename=%s' % filename
             response['X-Sendfile'] = filepath
-            return response
 
-        # Serve file with django
-        response = FileResponse(open(filepath, 'rb'))
+        if not response:
+            # Serve file with django
+            response = FileResponse(open(filepath, 'rb'))
 
-        if mime_type:
-            response['Content-Type'] = mime_type
+            if mime_type:
+                response['Content-Type'] = mime_type
 
-        response['Content-Length'] = os.path.getsize(filepath)
+            response['Content-Length'] = os.path.getsize(filepath)
 
-        # response['Content-Disposition'] = 'inline; filename=%s' % filename
+        if download:
+            response['Content-Type'] = 'application/force-download'
+            response['Content-Disposition'] = 'inline; filename=%s' % filename
 
         return response
 

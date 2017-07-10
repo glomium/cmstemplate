@@ -14,6 +14,7 @@ from rest_framework.documentation import include_docs_urls
 
 from useraccounts.forms import AuthenticationForm
 from filemanager.views import FileManagerView
+from filemanager.views import ImageManagerView
 
 from importlib import import_module
 from collections import OrderedDict
@@ -37,6 +38,8 @@ for key, modulepath in OrderedDict(sorted(getattr(settings, 'CMSTEMPLATE_SITEMAP
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^apidocs/', include_docs_urls(title="API", description=None)),
+    url(r'^cached/(?P<path>.*)$', ImageManagerView.as_view()),
+    url(r'^files/(?P<path>.*)$', FileManagerView.as_view()),
     url(r'^sitemap\.xml$', sitemaps_index, {'sitemaps': SITEMAPS}),
     url(
         r'^sitemap-(?P<section>\w+)\.xml$',
@@ -44,7 +47,6 @@ urlpatterns = [
         {'sitemaps': SITEMAPS},
         name="django.contrib.sitemaps.views.sitemap"
     ),
-    url(r'^files/(?P<path>.*)$', FileManagerView.as_view()),
 ]
 
 
