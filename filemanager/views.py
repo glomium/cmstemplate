@@ -39,7 +39,7 @@ class ImageManagerView(View):
         except ValueError:
             return HttpResponse(status=400)
 
-        filepath = os.path.join(settings.FILEMANAGER_ROOT, path)
+        filepath = os.path.join(settings.FILEMANAGER_STORAGE_ROOT, path)
         mime_type = MimeTypes().guess_type(filepath)[0]
 
         if not os.path.exists(filepath) or not os.path.isfile(filepath):
@@ -81,7 +81,7 @@ class FileManagerView(View):
         if not path:
             raise Http404
 
-        filepath = os.path.join(settings.FILEMANAGER_ROOT, path)
+        filepath = os.path.join(settings.FILEMANAGER_STORAGE_ROOT, path)
 
         if not os.path.exists(filepath):
             raise Http404("Could not find %s" % path)
@@ -108,7 +108,7 @@ class FileManagerView(View):
 
         sendtype = getattr(settings, "FILEMANAGER_SENDTYPE", None)
         filename = os.path.basename(filepath)
-        fileurl = os.path.join(settings.FILEMANAGER_URL, path)
+        fileurl = os.path.join(settings.FILEMANAGER_STORAGE_URL, path)
 
         response = None
 

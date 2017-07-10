@@ -186,13 +186,13 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
-FILEMANAGER_ROOT = os.path.join(BASE_DIR, "files_storage")
+FILEMANAGER_SENDTYPE = "xaccel"
+
+FILEMANAGER_STORAGE_ROOT = os.path.join(BASE_DIR, "storage")
+FILEMANAGER_STORAGE_URL = "/storage/"
 
 FILEMANAGER_CACHE_ROOT = os.path.join(BASE_DIR, "cached")
-FILEMANAGER_CACHE_URL = "/cached/"
-
-FILEMANAGER_URL = "/files_storage/"
-FILEMANAGER_SENDTYPE = "xaccel"
+FILEMANAGER_CACHE_URL = "/cached/"  # unused
 
 
 # LOGGING =========================================================================
