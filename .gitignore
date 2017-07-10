@@ -8,13 +8,12 @@
 
 /\.virtenv
 /app/local_settings\.py
+/cache_files
 /media/dist
 /node_modules
 /socket
 /static
 /virtenv
-
-
 
 /pg_database\.dump
 /fixtures_*\.json

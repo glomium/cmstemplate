@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'treebeard',
     'sekizai',
     'djangocms_history',
+
+    # own
+    'filemanager',
 ]
 
 AUTH_USER_MODEL = "useraccounts.User"
@@ -182,6 +185,11 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
+
+FILEMANAGER_ROOT = os.path.join(BASE_DIR, "files_store")
+FILEMANAGER_CACHE = os.path.join(BASE_DIR, "files_cache")
+FILEMANAGER_URL = "/files_store/"
+FILEMANAGER_SENDTYPE = "xaccel"
 
 
 # LOGGING =========================================================================

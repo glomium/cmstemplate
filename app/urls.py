@@ -13,6 +13,7 @@ from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
 
 from useraccounts.forms import AuthenticationForm
+from filemanager.views import FileManagerView
 
 from importlib import import_module
 from collections import OrderedDict
@@ -43,6 +44,7 @@ urlpatterns = [
         {'sitemaps': SITEMAPS},
         name="django.contrib.sitemaps.views.sitemap"
     ),
+    url(r'^files/(?P<path>.*)$', FileManagerView.as_view()),
 ]
 
 
