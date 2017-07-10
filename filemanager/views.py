@@ -112,7 +112,7 @@ class FileManagerView(View):
 
         response = None
 
-        # Nginx (TODO: untested)
+        # Nginx
         if sendtype == "xaccel" and not settings.DEBUG:
             response = HttpResponse()
             response['X-Accel-Redirect'] = fileurl
@@ -139,6 +139,11 @@ class FileManagerView(View):
 
     # PUT to create files
     def put(self, request, path, *args, **kwargs):
+        # TODO
+        return HttpResponse(status=500)
+
+    # POST to update files
+    def post(self, request, path, *args, **kwargs):
         # TODO
         return HttpResponse(status=500)
 
