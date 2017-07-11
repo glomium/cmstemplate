@@ -14,7 +14,12 @@ from PIL import Image
 
 from .conf import MIME_TYPES_IMAGES
 
+import importlib
+import logging
 import os
+
+
+logger = logging.getLogger(__name__)
 
 
 class ImageManagerView(View):
@@ -45,24 +50,43 @@ class ImageManagerView(View):
         if not os.path.exists(filepath) or not os.path.isfile(filepath):
             raise Http404("Could not find %s" % path)
 
-        if not mime_type in MIME_TYPES_IMAGES:
+        if mime_type not in MIME_TYPES_IMAGES:
             return HttpResponse(status=400)
 
         cachepath = os.path.join(settings.FILEMANAGER_CACHE_ROOT, full_path)
 
-        # TODO: check formatter
+        formatters = getattr(settings, "FILEMANAGER_FORMATTERS", {})
 
-        # TODO: check breakpoint
+        # check formatter
+        if formatter not in formatters:
+            logger.critical("formatter not found in formatters")
+            return HttpResponse(status=500)
+
+        try:
+            breakpoints = formatters[formatter]["breakpoints"]
+            formatter_module_name, formatter_class_name = formatters[formatter]["class"].rsplit('.', 1)
+            formatter_module = importlib.import_module(formatter_module_name)
+            formatter_class = getattr(formatter_module, formatter_class_name)
+
+        except (KeyError, ValueError, ImportError, AttributeError):
+            logger.exception("Error in loading formatter")
+            return HttpResponse(status=500)
+
+        # check breakpoint
+        if breakpoint not in breakpoints:
+            return HttpResponse(status=500)
 
         # create directories
         if not os.path.isdir(os.path.dirname(cachepath)):
             os.makedirs(os.path.dirname(cachepath))
 
-        filename = os.path.basename(cachepath)
+        formatter_instance = formatter_class(
+            size=breakpoints[breakpoint],
+            poi=(x or None, y or None),
+            **formatters[formatter]
+        )
 
-        # TODO USE FORMATTER
-        img = Image.open(filepath)
-        img.thumbnail((x, y))
+        img = formatter_instance.render(Image.open(filepath))
         img.save(cachepath)
 
         response = FileResponse(open(cachepath, 'rb'))

@@ -8,7 +8,7 @@
 
 /\.virtenv
 /app/local_settings\.py
-/cache
+/cached
 /media/dist
 /node_modules
 /socket
