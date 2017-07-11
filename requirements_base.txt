@@ -61,3 +61,7 @@ pyjwt==1.5.2
 
 # 2017-07-10: first install
 Pillow==4.2.1
+
+# 2017-07-11: first install
+# Comment: We only use the image manipulation functions from easy-thumbnails
+easy-thumbnails==2.4.1
