@@ -18,6 +18,12 @@ import importlib
 import logging
 import os
 
+try:
+    from filer.models import Image as FilerImage
+    FILER = True
+except ImportError:
+    FILER = False
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,20 +37,48 @@ class ImageManagerView(View):
         if not path:
             raise Http404
 
+        try:
+            formatter, breakpoint, path = path.split('/', 2)
+        except ValueError:
+            return HttpResponse(status=400)
+
         # TODO: read x, y from database
         # TODO: dont remove x, y from name unless image changes also delete cache
         # read formatter, breakpoint, x and y from image path
         try:
-            formatter, breakpoint, path = path.split('/', 2)
-            tmp, x, y = path.rsplit('_', 2)
+            tmp, pk, x, y = path.rsplit('_', 3)
             y, ext = y.split('.', 1)
+            pk = int(pk)
             x = int(x)
             y = int(y)
             path = tmp + '.' + ext
         except ValueError:
             return HttpResponse(status=400)
 
-        filepath = os.path.join(settings.FILEMANAGER_STORAGE_ROOT, path)
+        # TODO: if we have an own file-system manager we'll use the path
+        #       to obtain the object. sending the images pk wont be neccecary
+        #       anymore. at that case we'll drop the support for filer.
+        # TODO: compatability layer with filer
+        if pk:
+
+            try:
+                image = FilerImage.objects.get(pk=pk)
+            except FilerImage.DoesNotExist:
+                raise Http404
+
+            if image.file.url[1:] != path:
+                raise Http404
+
+            filepath = image.file.path
+
+            if image.subject_location:
+                if image.subject_location != '%s,%s' % (x, y):
+                    raise Http404
+
+        # Load image from storage and create cached thumbnail
+        else:
+            filepath = os.path.join(settings.FILEMANAGER_STORAGE_ROOT, path)
+
         mime_type = MimeTypes().guess_type(filepath)[0]
 
         if not os.path.exists(filepath) or not os.path.isfile(filepath):

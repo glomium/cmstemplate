@@ -41,7 +41,10 @@ class DefaultFormatter(BaseFormatter):
 
             for i in range(2):
                 if target[i] > 1.:
-                    target[i] = 1
+                    target[i] = 100.
+                else:
+                    target[i] *= 100
+
         else:
             target = None
 
