@@ -64,6 +64,7 @@ class ImageManagerView(View):
 
         try:
             breakpoints = formatters[formatter]["breakpoints"]
+            quality = formatters[formatter].get("quality", 85)
             formatter_module_name, formatter_class_name = formatters[formatter]["class"].rsplit('.', 1)
             formatter_module = importlib.import_module(formatter_module_name)
             formatter_class = getattr(formatter_module, formatter_class_name)
@@ -87,7 +88,11 @@ class ImageManagerView(View):
         )
 
         img = formatter_instance.render(Image.open(filepath))
-        img.save(cachepath)
+
+        if mime_type == "image/jpeg":
+            img.save(cachepath, quality=quality, optimize=1)
+        else:
+            img.save(cachepath)
 
         response = FileResponse(open(cachepath, 'rb'))
         response['Content-Type'] = mime_type
