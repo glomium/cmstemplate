@@ -37,7 +37,7 @@ class DefaultFormatter(BaseFormatter):
 
         if self.poi[0] and self.poi[1]:
             source_x, source_y = [float(v) for v in img.size]
-            target = (self.poi[0] / source_x, self.poi[1] / source_y)
+            target = [self.poi[0] / source_x, self.poi[1] / source_y]
 
             for i in range(2):
                 if target[i] > 1.:
