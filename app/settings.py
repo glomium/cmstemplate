@@ -260,7 +260,7 @@ LOGGING = {
     }
 }
 
-'''
+
 # FILER =======================================================================
 
 FILER_STORAGES = {
@@ -287,9 +287,8 @@ FILER_STORAGES = {
     },
 }
 
-#TEXT_SAVE_IMAGE_FUNCTION='cmsplugin_filer_image.integrations.ckeditor.create_image_plugin'
+TEXT_SAVE_IMAGE_FUNCTION = 'cmsplugin_filer_image.integrations.ckeditor.create_image_plugin'
 
-'''
 THUMBNAIL_PROCESSORS = (
 
     'easy_thumbnails.processors.colorspace',
@@ -300,7 +299,8 @@ THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.background',
 )
 
-THUMBNAIL_QUALITY = 90
+
+THUMBNAIL_QUALITY = 85
 
 # CMS TEMPLATE ====================================================================
 
@@ -360,7 +360,7 @@ if DEBUG:
     except ImportError:
         DEBUG_TOOLBAR = False
 else:
-   DEBUG_TOOLBAR = False
+    DEBUG_TOOLBAR = False
 
 custom = import_module(".settings_custom", __package__)
 
