@@ -192,7 +192,7 @@ FILEMANAGER_STORAGE_ROOT = os.path.join(BASE_DIR, "storage")
 FILEMANAGER_STORAGE_URL = "/storage/"
 
 FILEMANAGER_CACHE_ROOT = os.path.join(BASE_DIR, "cached")
-FILEMANAGER_CACHE_URL = "/cached/"  # unused
+FILEMANAGER_CACHE_URL = "/cached/"
 
 
 # LOGGING =========================================================================
