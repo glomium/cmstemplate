@@ -278,7 +278,7 @@ const AuthComponent = {
         }
     },
     transclude: true,
-    templateUrl: 'component/auth.html?' + BUILD,
+    templateUrl: '/component/auth.html?' + BUILD,
 }
 
 let AuthModule = angular

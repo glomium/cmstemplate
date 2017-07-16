@@ -1,91 +1,6 @@
 import angular from 'angular';
 
 /*
-import { EventEmitter } from '@angular/core';
-import { Injectable } from '@angular/core';
-// import { Optional } from '@angular/core';
-
-import { Observable } from 'rxjs';
-
-@Injectable()
-export class ResponsiveService {
-
-    private breakpoint: string;
-    private breakpoints: { [index: string]: number; };
-    private observer: any;
-
-    public changes = new EventEmitter<string>();
-
-    constructor() {
-        // TODO: make breakpoints configurable
-        this.breakpoints = {
-            'xs': 0,
-            'sm': 768,
-            'md': 992,
-            'lg': 1200,
-            'xl': 1600,
-        }
-        this.observer = Observable.fromEvent(window, 'resize').debounceTime(100).subscribe((event) => {
-            this.resize();
-        });
-        this.resize();
-    }
-
-    get(): string {
-        return this.breakpoint;
-    }
-
-    set(breakpoint: string): void {
-        this.breakpoint = breakpoint;
-        this.changes.emit(breakpoint);
-    }
-
-    resize(): void {
-        var breakpoint: string;
-        var selected = -1;
-        for (var key in this.breakpoints) {
-            var value = this.breakpoints[key];
-            if (value <= window.innerWidth && selected < value) {
-                selected = value;
-                breakpoint = key;
-            }
-        }
-        if(breakpoint && breakpoint != this.breakpoint) {
-            this.set(breakpoint);
-        }
-    }
-}
-
-
-@Injectable()
-export class ResponsiveImage {
-
-    private grid: string;
-
-    constructor(private responsive: ResponsiveService) {
-        // TODO: make service-url configureable
-
-        this.grid = this.responsive.get();
-        this.responsive.changes.subscribe((update:string) => {
-            this.grid = update;
-        });
-    }
-
-    img(url: string, context: string, extension: string): string {
-        if (extension === undefined) {
-            extension = 'jpg';
-        }
-        if (context === undefined) {
-            return url + '__' + this.grid + '.' + extension;
-        }
-        else {
-            return url + '__' + context + '_' + this.grid + '.' + extension;
-        }
-    }
-}
-*/
-
-/*
     === INSTALL ===============================================================
 
     import ResponsiveModule from './library/responsive.js';
@@ -93,18 +8,90 @@ export class ResponsiveImage {
     add ResponsiveModule to module
 
     === USAGE =================================================================
-
-    <qr-code height="200" width="200" data="mydata" error_correction="M" margin="4"></qr-code>
-
-    https://www.npmjs.com/package/qr-image
     
 */
 
 const ModuleName = "Responsive";
 
+class ResponsiveService {
+    /* @ngInject */
+    constructor($window, $rootScope) {
+        if (DEBUG) console.log(ModuleName + "Service: constructor");
+
+        this.$scope = $rootScope;
+        this.breakpoint = undefined;
+
+        angular.element($window).bind('resize', () => {
+            this.resize($window.innerWidth);
+        });
+
+        this.resize($window.innerWidth);
+    }
+
+    resize(size) {
+        // if (DEBUG) console.log(ModuleName + "Service: resize(" + size + ")");
+
+        var breakpoint = this.breakpoint;
+        var breakpoint_value = undefined;
+
+        this.breakpoint = undefined;
+
+        for (var key in BREAKPOINTS) {
+            var value = parseInt(BREAKPOINTS[key]);
+
+            // console.log(size, value, value <= size, breakpoint_value < value, breakpoint_value, this.breakpoint, key);
+            if (!this.breakpoint || value <= size && breakpoint_value > size) {
+                this.breakpoint = key;
+                breakpoint_value = value;
+            }
+        }
+
+        if (this.breakpoint != breakpoint) {
+            if (DEBUG) console.log(ModuleName + "Service: NEW BREAKPOINT " + this.breakpoint);
+            this.$scope.$broadcast('responsive:breakpoint', this.breakpoint);
+        }
+    }
+}
+
+class ResponsiveDirective {
+    constructor() {
+        if (DEBUG) console.log(ModuleName + "Directive: constructor");
+        this.restrict = "A";
+        this.template = '<img>';
+        this.transclude = false;
+        this.scope = {};
+    }
+
+    /* @ngInject */
+    controller($scope, ResponsiveService) {
+
+        $scope.breakpoint = ResponsiveService.breakpoint;
+
+        $scope.$on('responsive:breakpoint', (event, breakpoint) => {
+            $scope.breakpoint = breakpoint;
+            $scope.calc_image();
+        });
+
+        $scope.calc_image = () => {
+            $scope.image = '/cached/' + $scope.render + '/' + $scope.breakpoint + $scope.source;
+            // update image source
+            $scope.element.src = $scope.image;
+        }
+    }
+
+    link(scope, element, attrs) {
+        scope.render = attrs.ngResponsive;
+        scope.source = attrs.source || attrs.src;
+        scope.element = element[0];
+
+        scope.calc_image();
+    }
+}
+
 let Module = angular
 .module(ModuleName, [])
-.component('qrCode', QRComponent)
+.service("ResponsiveService", ResponsiveService)
+.directive('ngResponsive', () => new ResponsiveDirective)
 ;
 
 if (DEBUG) {

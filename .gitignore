@@ -5,6 +5,7 @@
 
 /*\.egg-info
 /database\.sqlite
+/npm-debug\.log
 
 /\.virtenv
 /app/local_settings\.py

@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def thumbnail(obj, cls, breakpoint):
+def thumbnail(obj):
 
     url, ext = obj.url.rsplit('.', 1)
 
@@ -16,10 +16,7 @@ def thumbnail(obj, cls, breakpoint):
         x = 0
         y = 0
 
-    return '%s%s/%s%s_%s_%s_%s.%s' % (
-        settings.FILEMANAGER_CACHE_URL,
-        cls,
-        breakpoint,
+    return '%s_%s_%s_%s.%s' % (
         url,
         obj.pk,
         x,
