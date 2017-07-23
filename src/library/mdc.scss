@@ -117,3 +117,28 @@ $mdc-layout-grid-default-column-span: 12;
         }
     }
 }
+
+@each $size in map-keys($mdc-layout-grid-breakpoints) {
+    $min: mdc-layout-grid-breakpoint-min($size);
+    $max: mdc-layout-grid-breakpoint-max($size);
+
+    @if $max != null {
+        .hidden-$size-down {
+            @media (min-width: $max) {
+                display: hidden;
+            }
+        }
+        @if $min != null {
+            .hidden-$size-up {
+                @media (max-width: $min) {
+                    display: hidden;
+                }
+            }
+        }
+        @else {
+            .hidden-$size-up {
+                display: hidden;
+            }
+        }
+    }
+}
